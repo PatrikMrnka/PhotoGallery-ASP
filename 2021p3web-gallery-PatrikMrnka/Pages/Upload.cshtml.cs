@@ -23,7 +23,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         [TempData]
         public string ErrorMessage { get; set; }
         public List<string> Files { get; set; } = new List<string>();
+        [BindProperty]
         public ICollection<IFormFile> Upload { get; set; }
+        public bool PictureIsPublic { get; set; }
         public UploadModel(IWebHostEnvironment environment, ApplicationDbContext context, IConfiguration configuration)
         {
             _environment = environment;
@@ -44,12 +46,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             int failedProcessing = 0;
             foreach(var uploadedFile in Upload) // cyklus pro každý nahrávaný soubor
             {
-                var fileRecord = new StoredFile
+                var fileRecord = new Picture
                 {
                     OriginalName = uploadedFile.FileName,
                     UploaderId = userId,
                     UploadedAt = DateTime.Now,
-                    ContentType = uploadedFile.ContentType
+                    ContentType = uploadedFile.ContentType,
+                    IsPublic = PictureIsPublic
                 };
                 if (uploadedFile.ContentType.StartsWith("image")) // je soubor obrázek?
                 {
@@ -83,7 +86,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                 }
                 try
                 {
-                    _context.Files.Add(fileRecord); // uložení záznamu do databáze
+                    _context.Pictures.Add(fileRecord); // uložení záznamu do databáze
                     await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
                     var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
                     // pod tímto klíèem se soubor uloží i fyzicky na disk

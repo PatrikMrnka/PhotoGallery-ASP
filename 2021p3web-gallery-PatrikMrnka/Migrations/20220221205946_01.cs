@@ -72,6 +72,27 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Album",
+                columns: table => new
+                {
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Album", x => x.AlbumId);
+                    table.ForeignKey(
+                        name: "FK_Album_AspNetUsers_UploaderId",
+                        column: x => x.UploaderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -157,24 +178,49 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Files",
+                name: "Pictures",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.PrimaryKey("PK_Pictures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Files_AspNetUsers_UploaderId",
+                        name: "FK_Pictures_AspNetUsers_UploaderId",
                         column: x => x.UploaderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PictureAlbums",
+                columns: table => new
+                {
+                    PictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PictureAlbums", x => new { x.PictureId, x.AlbumId });
+                    table.ForeignKey(
+                        name: "FK_PictureAlbums_Album_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Album",
+                        principalColumn: "AlbumId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PictureAlbums_Pictures_PictureId",
+                        column: x => x.PictureId,
+                        principalTable: "Pictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,9 +235,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 {
                     table.PrimaryKey("PK_Thumbnails", x => new { x.FileId, x.Type });
                     table.ForeignKey(
-                        name: "FK_Thumbnails_Files_FileId",
+                        name: "FK_Thumbnails_Pictures_FileId",
                         column: x => x.FileId,
-                        principalTable: "Files",
+                        principalTable: "Pictures",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -199,17 +245,22 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "633a698f-9fe5-49a0-924a-8701be2580f3", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "7d2e4719-0a67-4022-81a6-2e85880f8e8c", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "05683b3f-f10e-4f80-bfea-e60a1557fc57", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==", null, false, "", false, "administrator@gmail.com" });
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "2885ded6-7f95-40e1-8fa4-2ed36adf4cb4", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEDf7tj9pYmPWBn+rgjTyHl6I1QzhhE+dDSPlGB9X8FEb3v/4pJRCik0g7mkoLgQixQ==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "6540d112-4e61-48da-9236-06d12567613e" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Album_UploaderId",
+                table: "Album",
+                column: "UploaderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -251,8 +302,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Files_UploaderId",
-                table: "Files",
+                name: "IX_PictureAlbums_AlbumId",
+                table: "PictureAlbums",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pictures_UploaderId",
+                table: "Pictures",
                 column: "UploaderId");
         }
 
@@ -274,13 +330,19 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PictureAlbums");
+
+            migrationBuilder.DropTable(
                 name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Files");
+                name: "Album");
+
+            migrationBuilder.DropTable(
+                name: "Pictures");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

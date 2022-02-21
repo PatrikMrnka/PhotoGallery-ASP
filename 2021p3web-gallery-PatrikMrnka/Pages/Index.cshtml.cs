@@ -31,7 +31,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
         public void OnGet()
         {
-            Files = _context.Files
+            Files = _context.Pictures
                 .AsNoTracking()
                 .Include(f => f.Uploader)
                 .Include(f => f.Thumbnails)
@@ -53,7 +53,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             var fullName = Path.Combine(_environment.ContentRootPath, "Uploads", filename);
             if (System.IO.File.Exists(fullName)) // existuje soubor na disku?
             {
-                var fileRecord = _context.Files.Find(Guid.Parse(filename));
+                var fileRecord = _context.Pictures.Find(Guid.Parse(filename));
                 if (fileRecord != null) // je soubor v databázi?
                 {
                     return PhysicalFile(fullName, fileRecord.ContentType, fileRecord.OriginalName); // vrať ho zpátky pod původním názvem a typem
@@ -74,7 +74,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
         public async Task<IActionResult> OnGetThumbnail(string filename, ThumbnailType type = ThumbnailType.Square)
         {
-            StoredFile file = await _context.Files
+            Picture file = await _context.Pictures
               .AsNoTracking()
               .Where(f => f.Id == Guid.Parse(filename))
               .SingleOrDefaultAsync();

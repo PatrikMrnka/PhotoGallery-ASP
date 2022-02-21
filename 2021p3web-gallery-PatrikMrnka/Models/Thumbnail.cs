@@ -6,7 +6,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
     public class Thumbnail
     {
         [ForeignKey("FileId")]
-        public StoredFile File { get; set; }
+        public Picture File { get; set; }
         [Key]
         public Guid FileId { get; set; }
         [Key]

@@ -22,6 +22,33 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
+                {
+                    b.Property<Guid>("AlbumId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploaderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AlbumId");
+
+                    b.HasIndex("UploaderId");
+
+                    b.ToTable("Album");
+                });
+
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -98,14 +125,14 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
                             Birthday = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "05683b3f-f10e-4f80-bfea-e60a1557fc57",
+                            ConcurrencyStamp = "2885ded6-7f95-40e1-8fa4-2ed36adf4cb4",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "administrator@gmail.com",
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDf7tj9pYmPWBn+rgjTyHl6I1QzhhE+dDSPlGB9X8FEb3v/4pJRCik0g7mkoLgQixQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -113,7 +140,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         });
                 });
 
-            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Picture", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,6 +149,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OriginalName")
                         .IsRequired()
@@ -138,7 +168,22 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
                     b.HasIndex("UploaderId");
 
-                    b.ToTable("Files");
+                    b.ToTable("Pictures");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.PictureAlbum", b =>
+                {
+                    b.Property<Guid>("PictureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PictureId", "AlbumId");
+
+                    b.HasIndex("AlbumId");
+
+                    b.ToTable("PictureAlbums");
                 });
 
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Thumbnail", b =>
@@ -188,7 +233,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "633a698f-9fe5-49a0-924a-8701be2580f3",
+                            ConcurrencyStamp = "7d2e4719-0a67-4022-81a6-2e85880f8e8c",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -311,10 +356,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
                 {
                     b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", "Uploader")
-                        .WithMany()
+                        .WithMany("Albums")
                         .HasForeignKey("UploaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -322,9 +367,39 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.Navigation("Uploader");
                 });
 
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Picture", b =>
+                {
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", "Uploader")
+                        .WithMany("Pictures")
+                        .HasForeignKey("UploaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Uploader");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.PictureAlbum", b =>
+                {
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.Album", "Album")
+                        .WithMany("PictureAlbums")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.Picture", "Picture")
+                        .WithMany("PictureAlbums")
+                        .HasForeignKey("PictureId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Picture");
+                });
+
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Thumbnail", b =>
                 {
-                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", "File")
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.Picture", "File")
                         .WithMany("Thumbnails")
                         .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -384,8 +459,22 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
                 {
+                    b.Navigation("PictureAlbums");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Albums");
+
+                    b.Navigation("Pictures");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Picture", b =>
+                {
+                    b.Navigation("PictureAlbums");
+
                     b.Navigation("Thumbnails");
                 });
 #pragma warning restore 612, 618

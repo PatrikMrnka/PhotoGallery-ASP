@@ -11,14 +11,30 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
         {
         }
 
-        public DbSet<StoredFile> Files { get; set; }
+        public DbSet<Picture> Pictures { get; set; }
         public DbSet<Thumbnail> Thumbnails { get; set; }
+        public DbSet<PictureAlbum> PictureAlbums { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             base.OnModelCreating(builder);
+
             builder.Entity<Thumbnail>().HasKey(t => new { t.FileId, t.Type });
+
+            builder.Entity<PictureAlbum>()
+                .HasKey(a => new { a.PictureId, a.AlbumId });
+
+            builder.Entity<PictureAlbum>()
+                .HasOne(a => a.Picture)
+                .WithMany(a => a.PictureAlbums)
+                .HasForeignKey(b => b.PictureId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<PictureAlbum>()
+                .HasOne(a => a.Album)
+                .WithMany(a => a.PictureAlbums)
+                .HasForeignKey(b => b.AlbumId).OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
