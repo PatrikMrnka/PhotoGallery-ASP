@@ -51,7 +51,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -99,14 +98,14 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
                             Birthday = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "db78242d-ff10-49da-b7aa-b0d41f77ce18",
+                            ConcurrencyStamp = "05683b3f-f10e-4f80-bfea-e60a1557fc57",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "administrator@gmail.com",
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEHOKdhi0osHRSeHmSmqo4vMhpvWgilHgSyHrvg9SWSDFKxC518pu+ufH7L+dk30HA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -156,7 +155,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
                     b.HasKey("FileId", "Type");
 
-                    b.ToTable("Thumbnail");
+                    b.ToTable("Thumbnails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -189,7 +188,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "74d07c5f-df94-4abd-ac47-2016ab44a152",
+                            ConcurrencyStamp = "633a698f-9fe5-49a0-924a-8701be2580f3",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

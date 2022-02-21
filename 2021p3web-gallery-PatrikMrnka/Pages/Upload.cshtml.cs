@@ -35,21 +35,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         }
         public void OnGet()
         {
-            Files = _context.Files
-    .AsNoTracking()
-    .Include(f => f.Uploader)
-    .Include(f => f.Thumbnails)
-    .Select(f => new StoredFileListViewModel
-    {
-        Id = f.Id,
-        ContentType = f.ContentType,
-        OriginalName = f.OriginalName,
-        UploaderId = f.UploaderId,
-        Uploader = f.Uploader,
-        UploadedAt = f.UploadedAt,
-        ThumbnailCount = f.Thumbnails.Count
-    })
-    .ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -74,7 +59,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                     MemoryStream oms2 = new MemoryStream(); // proud pro obdélníkový náhled
                     uploadedFile.CopyTo(ims); // vlož obsah do vstupního proudu
                     IImageFormat format; // zde si uložíme formát obrázku (JPEG, GIF, ...), budeme ho potøebovat pøi ukládání
-                    using (Image image = Image.Load(ims.ToArray(), out format) // vytvoøíme ètvercový náhled
+                    using (Image image = Image.Load(ims.ToArray(), out format)) // vytvoøíme ètvercový náhled
                     {
                         int largestSize = Math.Max(image.Height, image.Width);
                         if (image.Width > image.Height) // podle orientace zmìníme velikost obrázku
@@ -100,7 +85,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                 {
                     _context.Files.Add(fileRecord); // uložení záznamu do databáze
                     await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
-                    var file = Path.Combine(_environment.ContentRootPath, "Uploads", uploadedFile.FileName);
+                    var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
                     // pod tímto klíèem se soubor uloží i fyzicky na disk
                     using (var fileStream = new FileStream(file, FileMode.Create))
                     {

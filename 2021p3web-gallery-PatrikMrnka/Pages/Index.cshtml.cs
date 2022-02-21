@@ -17,7 +17,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         public string SuccessMessage { get; set; }
         [TempData]
         public string ErrorMessage { get; set; }
-        public List<string> Files { get; set; } = new List<string>();
+        public List<StoredFileListViewModel> Files { get; set; } = new();
 
 
 
@@ -31,11 +31,21 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
         public void OnGet()
         {
-            var fullNames = Directory.GetFiles(Path.Combine(_environment.ContentRootPath, "Uploads")).ToList();
-            foreach (var fn in fullNames)
-            {
-                Files.Add(Path.GetFileName(fn));
-            }
+            Files = _context.Files
+                .AsNoTracking()
+                .Include(f => f.Uploader)
+                .Include(f => f.Thumbnails)
+                .Select(f => new StoredFileListViewModel
+                {
+                    Id = f.Id,
+                    ContentType = f.ContentType,
+                    OriginalName = f.OriginalName,
+                    UploaderId = f.UploaderId,
+                    Uploader = f.Uploader,
+                    UploadedAt = f.UploadedAt,
+                    ThumbnailCount = f.Thumbnails.Count
+                })
+                .ToList();
         }
         public IActionResult OnGetDownload(string filename)
         {

@@ -28,7 +28,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -178,7 +178,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Thumbnail",
+                name: "Thumbnails",
                 columns: table => new
                 {
                     FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -187,9 +187,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Thumbnail", x => new { x.FileId, x.Type });
+                    table.PrimaryKey("PK_Thumbnails", x => new { x.FileId, x.Type });
                     table.ForeignKey(
-                        name: "FK_Thumbnail_Files_FileId",
+                        name: "FK_Thumbnails_Files_FileId",
                         column: x => x.FileId,
                         principalTable: "Files",
                         principalColumn: "Id",
@@ -199,12 +199,12 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "74d07c5f-df94-4abd-ac47-2016ab44a152", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "633a698f-9fe5-49a0-924a-8701be2580f3", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "db78242d-ff10-49da-b7aa-b0d41f77ce18", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEEHOKdhi0osHRSeHmSmqo4vMhpvWgilHgSyHrvg9SWSDFKxC518pu+ufH7L+dk30HA==", null, false, "", false, "administrator@gmail.com" });
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "05683b3f-f10e-4f80-bfea-e60a1557fc57", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -274,7 +274,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Thumbnail");
+                name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
