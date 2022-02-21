@@ -19,7 +19,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
         [Required]
         public bool IsPublic { get; set; }
 
-        [ForeignKey("UploaderId")]
+        public string UploaderForeignKey { get; set; }
         public ApplicationUser Uploader { get; set; } // kdo soubor nahrál
         public ICollection<Thumbnail> Thumbnails { get; set; } // kolekce všech možných náhledů
         public ICollection<PictureAlbum> PictureAlbums { get; set; }

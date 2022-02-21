@@ -28,8 +28,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -72,24 +70,24 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Album",
+                name: "Albums",
                 columns: table => new
                 {
                     AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UploaderForeignKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Album", x => x.AlbumId);
+                    table.PrimaryKey("PK_Albums", x => x.AlbumId);
                     table.ForeignKey(
-                        name: "FK_Album_AspNetUsers_UploaderId",
+                        name: "FK_Albums_AspNetUsers_UploaderId",
                         column: x => x.UploaderId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -186,7 +184,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsPublic = table.Column<bool>(type: "bit", nullable: false)
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false),
+                    UploaderForeignKey = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -204,17 +203,23 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     PictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PictureAlbums", x => new { x.PictureId, x.AlbumId });
                     table.ForeignKey(
-                        name: "FK_PictureAlbums_Album_AlbumId",
+                        name: "FK_PictureAlbums_Albums_AlbumId",
                         column: x => x.AlbumId,
-                        principalTable: "Album",
+                        principalTable: "Albums",
                         principalColumn: "AlbumId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PictureAlbums_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PictureAlbums_Pictures_PictureId",
                         column: x => x.PictureId,
@@ -245,12 +250,12 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "7d2e4719-0a67-4022-81a6-2e85880f8e8c", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "e2a1b37d-acd0-4733-b76f-e1bb15bf5bae", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "2885ded6-7f95-40e1-8fa4-2ed36adf4cb4", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEDf7tj9pYmPWBn+rgjTyHl6I1QzhhE+dDSPlGB9X8FEb3v/4pJRCik0g7mkoLgQixQ==", null, false, "", false, "administrator@gmail.com" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "92fcc59c-3195-4617-a78a-ff2233486f68", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEGI3cfTeMxb1uviA91E/99aBIwU35Y5z3opQzdNhUN4R2bwtAd6Rz3eJTFzj1DaNzA==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -258,8 +263,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "6540d112-4e61-48da-9236-06d12567613e" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Album_UploaderId",
-                table: "Album",
+                name: "IX_Albums_UploaderId",
+                table: "Albums",
                 column: "UploaderId");
 
             migrationBuilder.CreateIndex(
@@ -307,6 +312,11 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 column: "AlbumId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PictureAlbums_ApplicationUserId",
+                table: "PictureAlbums",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pictures_UploaderId",
                 table: "Pictures",
                 column: "UploaderId");
@@ -339,7 +349,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Album");
+                name: "Albums");
 
             migrationBuilder.DropTable(
                 name: "Pictures");

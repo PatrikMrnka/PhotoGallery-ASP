@@ -12,6 +12,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
         }
 
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<Album> Albums { get; set; }
         public DbSet<Thumbnail> Thumbnails { get; set; }
         public DbSet<PictureAlbum> PictureAlbums { get; set; }
 
@@ -53,8 +54,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
                 EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "Admin01"),
                 LockoutEnabled = false,
-                SecurityStamp = String.Empty,
-                Name = "administrator@gmail.com"
+                SecurityStamp = String.Empty
             });
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
             {

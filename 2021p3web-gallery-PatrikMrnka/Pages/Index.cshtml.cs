@@ -19,9 +19,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         public string ErrorMessage { get; set; }
         public List<StoredFileListViewModel> Files { get; set; } = new();
 
-
-
-
         public IndexModel(ILogger<IndexModel> logger, IWebHostEnvironment environment, ApplicationDbContext context)
         {
             _logger = logger;

@@ -12,7 +12,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
         [Required]
         public bool IsPublic { get; set; }
         public DateTime CreationDate { get; set; }
-        [ForeignKey("UploaderId")]
+
+        public string UploaderForeignKey { get; set; }
         public ApplicationUser Uploader { get; set; }
         public ICollection<PictureAlbum> PictureAlbums { get; set; }
     }
