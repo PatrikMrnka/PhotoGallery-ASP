@@ -12,13 +12,41 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
         }
 
         public DbSet<StoredFile> Files { get; set; }
+        public DbSet<Album> Albums { get; set; }
         public DbSet<Thumbnail> Thumbnails { get; set; }
+        public DbSet<StoredFileAlbum> StoredFileAlbums { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             base.OnModelCreating(builder);
             builder.Entity<Thumbnail>().HasKey(t => new { t.FileId, t.Type });
+
+            builder.Entity<StoredFileAlbum>().HasKey(a => new { a.PictureId, a.AlbumId });
+
+            builder.Entity<StoredFileAlbum>()
+                .HasOne(a => a.Picture)
+                .WithMany(a => a.StoredFileAlbums)
+                .HasForeignKey(b => b.PictureId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<StoredFileAlbum>()
+                .HasOne(a => a.Album)
+                .WithMany(a => a.StoredFileAlbums)
+                .HasForeignKey(b => b.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<StoredFile>()
+                .HasOne(a => a.Uploader)
+                .WithMany(a => a.Pictures)
+                .HasForeignKey(b => b.UploaderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Album>()
+                .HasOne(a => a.Uploader)
+                .WithMany(a => a.Albums)
+                .HasForeignKey(b => b.UploaderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
@@ -37,8 +65,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
                 EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "Admin01"),
                 LockoutEnabled = false,
-                SecurityStamp = String.Empty,
-                Name = "administrator@gmail.com"
+                SecurityStamp = String.Empty
             });
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
             {

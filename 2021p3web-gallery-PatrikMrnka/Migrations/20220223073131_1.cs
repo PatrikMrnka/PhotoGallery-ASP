@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace _2021p3web_gallery_PatrikMrnka.Migrations
 {
-    public partial class _01 : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,8 +28,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,6 +65,27 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Albums",
+                columns: table => new
+                {
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Albums", x => x.AlbumId);
+                    table.ForeignKey(
+                        name: "FK_Albums_AspNetUsers_UploaderId",
+                        column: x => x.UploaderId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -161,10 +180,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploaderId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,7 +193,37 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         column: x => x.UploaderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoredFileAlbums",
+                columns: table => new
+                {
+                    AlbumId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PictureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoredFileAlbums", x => new { x.PictureId, x.AlbumId });
+                    table.ForeignKey(
+                        name: "FK_StoredFileAlbums_Albums_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Albums",
+                        principalColumn: "AlbumId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StoredFileAlbums_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_StoredFileAlbums_Files_PictureId",
+                        column: x => x.PictureId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,17 +248,22 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "633a698f-9fe5-49a0-924a-8701be2580f3", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "60c39f75-6c6f-43ce-add6-6f8f92c3a6de", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "05683b3f-f10e-4f80-bfea-e60a1557fc57", "administrator@gmail.com", true, false, null, "administrator@gmail.com", "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==", null, false, "", false, "administrator@gmail.com" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "a085c97f-5732-4bea-a1f8-44a703bbf4f7", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEDfokQk6rKlXtTo8yWHtqvgrrvptL1abCsYZsZWILGyqc9QBojRdmnJI1AYe4gBPOQ==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "6540d112-4e61-48da-9236-06d12567613e" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Albums_UploaderId",
+                table: "Albums",
+                column: "UploaderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -254,6 +308,16 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 name: "IX_Files_UploaderId",
                 table: "Files",
                 column: "UploaderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoredFileAlbums_AlbumId",
+                table: "StoredFileAlbums",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoredFileAlbums_ApplicationUserId",
+                table: "StoredFileAlbums",
+                column: "ApplicationUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -274,10 +338,16 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "StoredFileAlbums");
+
+            migrationBuilder.DropTable(
                 name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Albums");
 
             migrationBuilder.DropTable(
                 name: "Files");

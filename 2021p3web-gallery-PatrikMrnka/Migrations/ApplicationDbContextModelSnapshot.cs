@@ -22,6 +22,33 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
+                {
+                    b.Property<Guid>("AlbumId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploaderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AlbumId");
+
+                    b.HasIndex("UploaderId");
+
+                    b.ToTable("Albums");
+                });
+
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -29,9 +56,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -49,9 +73,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -97,15 +118,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            Birthday = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "05683b3f-f10e-4f80-bfea-e60a1557fc57",
+                            ConcurrencyStamp = "a085c97f-5732-4bea-a1f8-44a703bbf4f7",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            Name = "administrator@gmail.com",
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKnNI6+utA6WYdraWaJ7h6S2N7xYTaAgAKDsS2dTA22vD6My5isKodBuwFEdBvAYNQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDfokQk6rKlXtTo8yWHtqvgrrvptL1abCsYZsZWILGyqc9QBojRdmnJI1AYe4gBPOQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -139,6 +158,26 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.HasIndex("UploaderId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFileAlbum", b =>
+                {
+                    b.Property<Guid>("PictureId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PictureId", "AlbumId");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("StoredFileAlbums");
                 });
 
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Thumbnail", b =>
@@ -188,7 +227,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "633a698f-9fe5-49a0-924a-8701be2580f3",
+                            ConcurrencyStamp = "60c39f75-6c6f-43ce-add6-6f8f92c3a6de",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -311,15 +350,49 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
                 {
                     b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", "Uploader")
-                        .WithMany()
+                        .WithMany("Albums")
                         .HasForeignKey("UploaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Uploader");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
+                {
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", "Uploader")
+                        .WithMany("Pictures")
+                        .HasForeignKey("UploaderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Uploader");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFileAlbum", b =>
+                {
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.Album", "Album")
+                        .WithMany("StoredFileAlbums")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", null)
+                        .WithMany("StoredFileAlbums")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", "Picture")
+                        .WithMany("StoredFileAlbums")
+                        .HasForeignKey("PictureId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Picture");
                 });
 
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Thumbnail", b =>
@@ -384,8 +457,24 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.Album", b =>
+                {
+                    b.Navigation("StoredFileAlbums");
+                });
+
+            modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Albums");
+
+                    b.Navigation("Pictures");
+
+                    b.Navigation("StoredFileAlbums");
+                });
+
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
                 {
+                    b.Navigation("StoredFileAlbums");
+
                     b.Navigation("Thumbnails");
                 });
 #pragma warning restore 612, 618
