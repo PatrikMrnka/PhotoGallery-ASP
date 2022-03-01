@@ -138,7 +138,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Areas.Identity.Pages.Account
 
                     var newAlbum = new Album
                     {
-                        Name = "Mé první album",
+                        Name = "Výchozí",
                         CreationDate = DateTime.Now,
                         IsPublic = false,
                         UploaderId = userId

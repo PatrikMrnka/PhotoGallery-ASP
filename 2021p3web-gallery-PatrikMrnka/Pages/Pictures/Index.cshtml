@@ -1,0 +1,62 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Pictures.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFile[0].UploadedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFile[0].OriginalName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFile[0].ContentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFile[0].Uploader)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.StoredFile) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OriginalName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uploader.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UploadedAt)
+            </td
+            <td>
+
+                @Html.DisplayFor(modelItem => item.ContentType)
+            </td
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+            }
+@foreach (var f in Model.Files)
+                {
+                                <td>
+                <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
+            </td>
+                }
+            </tr>
+
+    </tbody>
+</table>

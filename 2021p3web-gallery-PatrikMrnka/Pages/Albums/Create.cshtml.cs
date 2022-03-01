@@ -33,12 +33,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;   
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
 
             //if (!ModelState.IsValid)
             //{
             //    return Page();
             //}
+
 
             var newAlbum = new Album
             {

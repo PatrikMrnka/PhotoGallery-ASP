@@ -18,6 +18,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         private int _squareSize;
         private int _sameAspectRatioHeigth;
 
+        public Guid AlbumId { get; set; }
         [TempData]
         public string SuccessMessage { get; set; }
         [TempData]
@@ -44,66 +45,100 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             int failedProcessing = 0;
             foreach(var uploadedFile in Upload) // cyklus pro každý nahrávaný soubor
             {
-                var fileRecord = new StoredFile
-                {
-                    OriginalName = uploadedFile.FileName,
-                    UploaderId = userId,
-                    UploadedAt = DateTime.Now,
-                    ContentType = uploadedFile.ContentType
-                };
                 if (uploadedFile.ContentType.StartsWith("image")) // je soubor obrázek?
                 {
-                    fileRecord.Thumbnails = new List<Thumbnail>();
-                    MemoryStream ims = new MemoryStream(); // proud pro pøíchozí obrázek
-                    MemoryStream oms1 = new MemoryStream(); // proud pro ètvercový náhled
-                    MemoryStream oms2 = new MemoryStream(); // proud pro obdélníkový náhled
-                    uploadedFile.CopyTo(ims); // vlož obsah do vstupního proudu
-                    IImageFormat format; // zde si uložíme formát obrázku (JPEG, GIF, ...), budeme ho potøebovat pøi ukládání
-                    using (Image image = Image.Load(ims.ToArray(), out format)) // vytvoøíme ètvercový náhled
+                    MemoryStream ims1 = new MemoryStream(); // proud pro pøíchozí obrázek
+                    uploadedFile.CopyTo(ims1);
+                    using (Image image1 = Image.Load(ims1.ToArray()))
                     {
-                        int largestSize = Math.Max(image.Height, image.Width);
-                        if (image.Width > image.Height) // podle orientace zmìníme velikost obrázku
-                        {
-                            image.Mutate(x => x.Resize(0, _squareSize));
+                        if (image1.Width <= 2000) // je šíøka fotky menší nebo rovna 2000px?
+                        { 
+                            var fileRecord = new StoredFile
+                            {
+                                OriginalName = uploadedFile.FileName,
+                                UploaderId = userId,
+                                UploadedAt = DateTime.Now,
+                                ContentType = uploadedFile.ContentType
+                            };
+
+                            fileRecord.Thumbnails = new List<Thumbnail>();
+
+                            MemoryStream ims = new MemoryStream(); // proud pro pøíchozí obrázek
+                            MemoryStream oms1 = new MemoryStream(); // proud pro ètvercový náhled
+                            MemoryStream oms2 = new MemoryStream(); // proud pro obdélníkový náhled
+                            IImageFormat format; // zde si uložíme formát obrázku (JPEG, GIF, ...), budeme ho potøebovat pøi ukládání
+                            uploadedFile.CopyTo(ims); // vlož obsah do vstupního proudu
+                            using (Image image = Image.Load(ims.ToArray(), out format)) // vytvoøíme ètvercový náhled
+                            {
+                                int largestSize = Math.Max(image.Height, image.Width);
+                                if (image.Width > 2000)
+                                {
+                                    ErrorMessage = "Obrázek musí mít menší šíøi než 2000px";
+                                }
+                                if (image.Width > image.Height) // podle orientace zmìníme velikost obrázku
+                                {
+                                    image.Mutate(x => x.Resize(0, _squareSize));
+                                }
+                                else
+                                {
+                                    image.Mutate(x => x.Resize(_squareSize, 0));
+                                }
+                                image.Mutate(x => x.Crop(new Rectangle((image.Width - _squareSize) / 2, (image.Height - _squareSize) / 2, _squareSize, _squareSize))); // obrázek oøízneme na ètverec
+                                image.Save(oms1, format); // vložime ho do výstupního proudu
+                                fileRecord.Thumbnails.Add(new Thumbnail { Type = ThumbnailType.Square, Blob = oms1.ToArray() }); // uložíme do databáze jako pole bytù
+                            }
+                            using (Image image = Image.Load(ims.ToArray(), out format)) // obdélníkový náhled zaèíná zde
+                            {
+                                image.Mutate(x => x.Resize(0, _sameAspectRatioHeigth)); // zmìna velikosti
+                                image.Save(oms2, format); // pøes proud ho uložit do databáze
+                                fileRecord.Thumbnails.Add(new Thumbnail { Type = ThumbnailType.SameAspectRatio, Blob = oms2.ToArray() });
+                            }
+                            try
+                            {
+
+                                _context.Files.Add(fileRecord); // uložení záznamu do databáze
+                                await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
+
+                                AlbumId = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.Name == "Výchozí").Select(a => a.AlbumId).FirstOrDefault();
+
+                                var albumPictureRecord = new StoredFileAlbum
+                                {
+                                    AlbumId = AlbumId,
+                                    PictureId = fileRecord.Id
+                                };
+
+                                _context.StoredFileAlbums.Add(albumPictureRecord); // uložení fotky do výchozí galerie
+                                await _context.SaveChangesAsync();
+                                var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
+                                // pod tímto klíèem se soubor uloží i fyzicky na disk
+                                using (var fileStream = new FileStream(file, FileMode.Create))
+                                {
+                                    await uploadedFile.CopyToAsync(fileStream);
+                                };
+                                successfulProcessing++;
+                            }
+                            catch
+                            {
+                                failedProcessing++;
+                            }
+                            if (failedProcessing == 0)
+                            {
+                                SuccessMessage = "Všechny soubory byly úspìšnì nahrány.";
+                            }
+                            else
+                            {
+                                ErrorMessage = "Je zde <b>" + failedProcessing + "<b> problém/y pøi nahrávání a zpracování souborù.";
+                            }
                         }
-                        else
+                        else if (image1.Width > 2000)
                         {
-                            image.Mutate(x => x.Resize(_squareSize, 0));
+                            ErrorMessage = "Obrázek mùže být maximálnì široký 2000px";
                         }
-                        image.Mutate(x => x.Crop(new Rectangle((image.Width - _squareSize) / 2, (image.Height - _squareSize) / 2, _squareSize, _squareSize))); // obrázek oøízneme na ètverec
-                        image.Save(oms1, format); // vložime ho do výstupního proudu
-                        fileRecord.Thumbnails.Add(new Thumbnail { Type = ThumbnailType.Square, Blob = oms1.ToArray() }); // uložíme do databáze jako pole bytù
-                    }
-                    using (Image image = Image.Load(ims.ToArray(), out format)) // obdélníkový náhled zaèíná zde
-                    {
-                        image.Mutate(x => x.Resize(0, _sameAspectRatioHeigth)); // zmìna velikosti
-                        image.Save(oms2, format); // pøes proud ho uložit do databáze
-                        fileRecord.Thumbnails.Add(new Thumbnail { Type = ThumbnailType.SameAspectRatio, Blob = oms2.ToArray() });
                     }
                 }
-                try
+                else if (!uploadedFile.ContentType.StartsWith("image"))
                 {
-                    _context.Files.Add(fileRecord); // uložení záznamu do databáze
-                    await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
-                    var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
-                    // pod tímto klíèem se soubor uloží i fyzicky na disk
-                    using (var fileStream = new FileStream(file, FileMode.Create))
-                    {
-                        await uploadedFile.CopyToAsync(fileStream);
-                    };
-                    successfulProcessing++;
-                }
-                catch
-                {
-                    failedProcessing++;
-                }
-                if(failedProcessing == 0)
-                {
-                    SuccessMessage = "Všechny soubory byly úspìšnì nahrány.";
-                }
-                else
-                {
-                    ErrorMessage = "Je zde <b>" + failedProcessing + "<b> problém/y pøi nahrávání a zpracování souborù.";
+                    ErrorMessage = "Nahraný soubor není obrázek";
                 }
             }
             return RedirectToPage("/Index");
