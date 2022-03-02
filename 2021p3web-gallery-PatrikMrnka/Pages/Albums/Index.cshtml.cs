@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using _2021p3web_gallery_PatrikMrnka.Data;
 using _2021p3web_gallery_PatrikMrnka.Models;
+using System.Security.Claims;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
 {
@@ -21,11 +22,23 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
         }
 
         public IList<Album> Album { get;set; }
+        public string? userId { get; set; }
 
         public async Task OnGetAsync()
         {
-            Album = await _context.Albums
-                .Include(a => a.Uploader).ToListAsync();
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            if(userId == null)
+            {
+                Album = await _context.Albums
+                    .Include(a => a.Uploader).Where(a => a.IsPublic == true).ToListAsync();
+            }
+            else
+            {
+                Album = await _context.Albums
+                    .Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+            }
+            //Album = await _context.Albums
+            //    .Include(a => a.Uploader).ToListAsync();
         }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace _2021p3web_gallery_PatrikMrnka.Migrations
 {
-    public partial class _01 : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -248,12 +248,12 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "6a3fec39-57ae-4da7-8295-637fb1586a8e", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "09ffe261-f5d7-44c1-81ed-24e5735ce603", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "af6f9344-784e-4b70-aa7b-1b51f9cfe611", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAELpCG5bcAVYX/2pSHJomxFpovFgaPzHQN5iyitvV1OxN/1+mRmPk1NDqJ3Tk+RFCsw==", null, false, "", false, "administrator@gmail.com" });
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "8eea89e7-6892-4e1b-8fa5-33a5183201e8", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEHTyblvT/UBw+hS67uZuV1OPu4oLX+dOuZg2YByvjDOs61FSnF/JIVl5QWYrnHWRSQ==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

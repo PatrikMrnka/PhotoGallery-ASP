@@ -14,6 +14,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
         public string OriginalName { get; set; } // původní název souboru
         [Required]
         public string ContentType { get; set; } // druh obsahu v souboru (MIME type)
+        public bool IsPublic { get; set; } // je obrázek veřejný?
         public ICollection<Thumbnail> Thumbnails { get; set; } // kolekce všech možných náhledů
         [ForeignKey("UploaderId")]
         public ApplicationUser Uploader { get; set; } // kdo soubor nahrál

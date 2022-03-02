@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using _2021p3web_gallery_PatrikMrnka.Data;
 using _2021p3web_gallery_PatrikMrnka.Models;
+using System.Security.Claims;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages.Pictures
 {
@@ -20,29 +21,21 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Pictures
             _context = context;
         }
 
-        public IList<StoredFile> StoredFile { get;set; }
-        public IList<StoredFileListViewModel> Files { get; set; }
-
+        public IList<StoredFile> StoredFile { get; set; }
+        public string? userId { get; set; }
 
         public async Task OnGetAsync()
         {
-            StoredFile = await _context.Files
-                .Include(s => s.Uploader).ToListAsync();
-            Files = _context.Files
-    .AsNoTracking()
-    .Include(f => f.Uploader)
-    .Include(f => f.Thumbnails)
-    .Select(f => new StoredFileListViewModel
-    {
-        Id = f.Id,
-        ContentType = f.ContentType,
-        OriginalName = f.OriginalName,
-        UploaderId = f.UploaderId,
-        Uploader = f.Uploader,
-        UploadedAt = f.UploadedAt,
-        ThumbnailCount = f.Thumbnails.Count
-    })
-    .ToList();
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            if (userId == null)
+            {
+
+            }
+            else
+            {
+                StoredFile = await _context.Files
+                    .Include(s => s.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+            }
         }
     }
 }

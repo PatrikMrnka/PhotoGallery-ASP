@@ -118,13 +118,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "af6f9344-784e-4b70-aa7b-1b51f9cfe611",
+                            ConcurrencyStamp = "3e9cb7ec-265f-4533-90ca-2fccc1c93812",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELpCG5bcAVYX/2pSHJomxFpovFgaPzHQN5iyitvV1OxN/1+mRmPk1NDqJ3Tk+RFCsw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB8nxCQj1bNoCJoxbzdq9/xk1my3VCUnNDO/+BUtjAg1uEg/xBtIR/8s3W0PEZZc1g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -141,6 +141,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OriginalName")
                         .IsRequired()
@@ -227,7 +230,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "6a3fec39-57ae-4da7-8295-637fb1586a8e",
+                            ConcurrencyStamp = "666c85e6-8c3f-446d-a342-9965037bc22c",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

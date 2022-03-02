@@ -2,13 +2,13 @@
 @model _2021p3web_gallery_PatrikMrnka.Pages.Pictures.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Knihovna";
 }
 
-<h1>Index</h1>
+<h1>Knihovna</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="/Upload">Nahrát obrázek</a>
 </p>
 <table class="table">
     <thead>
@@ -32,31 +32,20 @@
 @foreach (var item in Model.StoredFile) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.UploadedAt)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.OriginalName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Uploader.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UploadedAt)
-            </td
-            <td>
-
                 @Html.DisplayFor(modelItem => item.ContentType)
-            </td
+            </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>
-            }
-@foreach (var f in Model.Files)
-                {
-                                <td>
-                <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
-            </td>
-                }
-            </tr>
-
+        </tr>
+}
     </tbody>
 </table>
+

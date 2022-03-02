@@ -35,6 +35,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                 .AsNoTracking()
                 .Include(f => f.Uploader)
                 .Include(f => f.Thumbnails)
+                .Where(a => a.IsPublic == true)
                 .Select(f => new StoredFileListViewModel
                 {
                     Id = f.Id,
@@ -43,34 +44,35 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                     UploaderId = f.UploaderId,
                     Uploader = f.Uploader,
                     UploadedAt = f.UploadedAt,
-                    ThumbnailCount = f.Thumbnails.Count
+                    ThumbnailCount = f.Thumbnails.Count,
+                    IsPublic = f.IsPublic
                 })
                 .ToList();
         }
-        public IActionResult OnGetDownload(string filename)
-        {
-            filename = Path.GetFileName(filename);
-            var fullName = Path.Combine(_environment.ContentRootPath, "Uploads", filename);
-            if (System.IO.File.Exists(fullName)) // existuje soubor na disku?
-            {
-                var fileRecord = _context.Files.Find(Guid.Parse(filename));
-                if (fileRecord != null) // je soubor v databázi?
-                {
-                    return PhysicalFile(fullName, fileRecord.ContentType, fileRecord.OriginalName); // vrať ho zpátky pod původním názvem a typem
-                }
-                else
-                {
-                    ErrorMessage = "Žádný záznam o souboru v databázi.";
-                    return RedirectToPage();
-                }
-            }
-            else
-            //return NotFound();
-            {
-                ErrorMessage = "Soubor nenalezen.";
-                return RedirectToPage();
-            }
-        }
+        //public IActionResult OnGetDownload(string filename)
+        //{
+        //    filename = Path.GetFileName(filename);
+        //    var fullName = Path.Combine(_environment.ContentRootPath, "Uploads", filename);
+        //    if (System.IO.File.Exists(fullName)) // existuje soubor na disku?
+        //    {
+        //        var fileRecord = _context.Files.Find(Guid.Parse(filename));
+        //        if (fileRecord != null) // je soubor v databázi?
+        //        {
+        //            return PhysicalFile(fullName, fileRecord.ContentType, fileRecord.OriginalName); // vrať ho zpátky pod původním názvem a typem
+        //        }
+        //        else
+        //        {
+        //            ErrorMessage = "Žádný záznam o souboru v databázi.";
+        //            return RedirectToPage();
+        //        }
+        //    }
+        //    else
+        //    //return NotFound();
+        //    {
+        //        ErrorMessage = "Soubor nenalezen.";
+        //        return RedirectToPage();
+        //    }
+        //}
 
         public async Task<IActionResult> OnGetThumbnail(string filename, ThumbnailType type = ThumbnailType.Square)
         {

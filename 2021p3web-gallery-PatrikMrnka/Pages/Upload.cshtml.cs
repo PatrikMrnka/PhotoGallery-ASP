@@ -58,7 +58,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                 OriginalName = uploadedFile.FileName,
                                 UploaderId = userId,
                                 UploadedAt = DateTime.Now,
-                                ContentType = uploadedFile.ContentType
+                                ContentType = uploadedFile.ContentType,
+                                IsPublic = false
                             };
 
                             fileRecord.Thumbnails = new List<Thumbnail>();
@@ -71,10 +72,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                             using (Image image = Image.Load(ims.ToArray(), out format)) // vytvoøíme ètvercový náhled
                             {
                                 int largestSize = Math.Max(image.Height, image.Width);
-                                if (image.Width > 2000)
-                                {
-                                    ErrorMessage = "Obrázek musí mít menší šíøi než 2000px";
-                                }
                                 if (image.Width > image.Height) // podle orientace zmìníme velikost obrázku
                                 {
                                     image.Mutate(x => x.Resize(0, _squareSize));

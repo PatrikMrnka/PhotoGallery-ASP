@@ -9,5 +9,6 @@
         public string OriginalName { get; set; }
         public string ContentType { get; set; }
         public int ThumbnailCount { get; set; }
+        public bool IsPublic { get; set; } // je obrázek veřejný?
     }
 }

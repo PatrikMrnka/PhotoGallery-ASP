@@ -1,5 +1,4 @@
-﻿
-@page
+﻿@page
 @model _2021p3web_gallery_PatrikMrnka.Pages.Pictures.DeleteModel
 
 @{
@@ -30,6 +29,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StoredFile.ContentType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StoredFile.IsPublic)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StoredFile.IsPublic)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StoredFile.Uploader)

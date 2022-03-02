@@ -12,8 +12,8 @@ using _2021p3web_gallery_PatrikMrnka.Data;
 namespace _2021p3web_gallery_PatrikMrnka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220301193509_01")]
-    partial class _01
+    [Migration("20220302094615_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,13 +120,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "af6f9344-784e-4b70-aa7b-1b51f9cfe611",
+                            ConcurrencyStamp = "8eea89e7-6892-4e1b-8fa5-33a5183201e8",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELpCG5bcAVYX/2pSHJomxFpovFgaPzHQN5iyitvV1OxN/1+mRmPk1NDqJ3Tk+RFCsw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHTyblvT/UBw+hS67uZuV1OPu4oLX+dOuZg2YByvjDOs61FSnF/JIVl5QWYrnHWRSQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -229,7 +229,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "6a3fec39-57ae-4da7-8295-637fb1586a8e",
+                            ConcurrencyStamp = "09ffe261-f5d7-44c1-81ed-24e5735ce603",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

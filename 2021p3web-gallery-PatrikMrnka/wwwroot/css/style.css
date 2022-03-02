@@ -1,0 +1,17 @@
+﻿a .navbar_title {
+    display: flex;
+    text-decoration: none;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+}
+.navbar_title_icloud {
+    font-size: 35px;
+}
+.navbar_title_fotky {
+    font-size: 40px;
+}
+.header_flex {
+    display: flex;
+    flex-direction: row;
+}
