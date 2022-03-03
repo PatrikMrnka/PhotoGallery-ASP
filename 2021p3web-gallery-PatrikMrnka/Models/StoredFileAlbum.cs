@@ -2,10 +2,10 @@
 {
     public class StoredFileAlbum
     {
-        public Guid AlbumId { get; set; }
+        public Guid? AlbumId { get; set; }
         public Album Album { get; set; }
 
-        public Guid PictureId { get; set; }
+        public Guid? PictureId { get; set; }
         public StoredFile Picture { get; set; }
     }
 }

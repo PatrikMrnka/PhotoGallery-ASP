@@ -38,7 +38,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Pictures
             {
                 return NotFound();
             }
-           ViewData["UploaderId"] = new SelectList(_context.Users, "Id", "Id");
+           //ViewData["UploaderId"] = new SelectList(_context.Users, "Id", "Id");
             return Page();
         }
 
@@ -46,10 +46,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Pictures
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             _context.Attach(StoredFile).State = EntityState.Modified;
 

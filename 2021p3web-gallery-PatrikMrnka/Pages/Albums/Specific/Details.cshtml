@@ -1,0 +1,31 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specific.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>StoredFileAlbum</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StoredFileAlbum.Album)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StoredFileAlbum.Album.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StoredFileAlbum.Picture)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StoredFileAlbum.Picture.ContentType)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-page="./Index">Back to List</a>
+</div>

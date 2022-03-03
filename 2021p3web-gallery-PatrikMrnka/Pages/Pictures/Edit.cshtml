@@ -14,30 +14,14 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="StoredFile.Id" />
-            <div class="form-group">
-                <label asp-for="StoredFile.UploadedAt" class="control-label"></label>
-                <input asp-for="StoredFile.UploadedAt" class="form-control" />
-                <span asp-validation-for="StoredFile.UploadedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StoredFile.OriginalName" class="control-label"></label>
-                <input asp-for="StoredFile.OriginalName" class="form-control" />
-                <span asp-validation-for="StoredFile.OriginalName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StoredFile.ContentType" class="control-label"></label>
-                <input asp-for="StoredFile.ContentType" class="form-control" />
-                <span asp-validation-for="StoredFile.ContentType" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="StoredFile.UploadedAt" />
+            <input type="hidden" asp-for="StoredFile.ContentType" />
+            <input type="hidden" asp-for="StoredFile.OriginalName" />
+            <input type="hidden" asp-for="StoredFile.UploaderId" />
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="StoredFile.IsPublic" /> @Html.DisplayNameFor(model => model.StoredFile.IsPublic)
                 </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="StoredFile.UploaderId" class="control-label"></label>
-                <select asp-for="StoredFile.UploaderId" class="form-control" asp-items="ViewBag.UploaderId"></select>
-                <span asp-validation-for="StoredFile.UploaderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

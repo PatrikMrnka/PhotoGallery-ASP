@@ -7,6 +7,7 @@ using System.Security.Claims;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages
 {
@@ -18,13 +19,23 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         private int _squareSize;
         private int _sameAspectRatioHeigth;
 
-        public Guid AlbumId { get; set; }
+        public Guid AlbumIdDefault { get; set; }
+        public Guid? AlbumIdReceived { get; set; }
+        public Guid? PictureIdReceived { get; set; }
         [TempData]
         public string SuccessMessage { get; set; }
         [TempData]
         public string ErrorMessage { get; set; }
         public List<string> Files { get; set; } = new List<string>();
         public ICollection<IFormFile> Upload { get; set; }
+        [BindProperty]
+        public StoredFile StoredFile { get; set; }
+        [BindProperty]
+        public Album Album { get; set; }
+        [BindProperty]
+        public StoredFileAlbum StoredFileAlbum { get; set; }
+
+
         public UploadModel(IWebHostEnvironment environment, ApplicationDbContext context, IConfiguration configuration)
         {
             _environment = environment;
@@ -34,15 +45,20 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             if (Int32.TryParse(_configuration["Thumbnails:SameAspectRatioHeigth"], out _sameAspectRatioHeigth) == false) _sameAspectRatioHeigth = 128;
 
         }
-        public void OnGet()
+        public void OnGet(Guid? albumid, Guid? pictureid)
         {
+            AlbumIdReceived = albumid;
+            PictureIdReceived = pictureid;
+            ViewData["AlbumId"] = new SelectList(_context.StoredFileAlbums, "AlbumId", "Name");
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(Guid? albumid, Guid? pictureid)
         {
             var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // získáme id pøihlášeného uživatele
             int successfulProcessing = 0;
             int failedProcessing = 0;
+            AlbumIdReceived = albumid; // ID alba do kterého chci pøidat obrázek
+            PictureIdReceived = pictureid; // ID obrázku, který chci nahrát do nìjakého alba
             foreach(var uploadedFile in Upload) // cyklus pro každý nahrávaný soubor
             {
                 if (uploadedFile.ContentType.StartsWith("image")) // je soubor obrázek?
@@ -95,16 +111,45 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
                                 _context.Files.Add(fileRecord); // uložení záznamu do databáze
                                 await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
-
-                                AlbumId = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.Name == "Výchozí").Select(a => a.AlbumId).FirstOrDefault();
-
-                                var albumPictureRecord = new StoredFileAlbum
+                                if (albumid == null) // uložení fotky do výchozího alba
                                 {
-                                    AlbumId = AlbumId,
-                                    PictureId = fileRecord.Id
-                                };
+                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.Name == "Výchozí").Select(a => a.AlbumId).FirstOrDefault();
 
-                                _context.StoredFileAlbums.Add(albumPictureRecord); // uložení fotky do výchozí galerie
+                                    var albumPictureRecord = new StoredFileAlbum
+                                    {
+                                        AlbumId = AlbumIdDefault,
+                                        PictureId = fileRecord.Id
+                                    };
+
+                                    _context.StoredFileAlbums.Add(albumPictureRecord); 
+                                    await _context.SaveChangesAsync();
+                                }
+                                else if (albumid != null) // uložení fotky do konkrétního alba
+                                { 
+                                    var albumPictureRecord = new StoredFileAlbum
+                                    {
+                                        AlbumId = AlbumIdReceived,
+                                        PictureId = fileRecord.Id
+                                    };
+
+                                    _context.StoredFileAlbums.Add(albumPictureRecord);
+                                    await _context.SaveChangesAsync();
+                                }
+                                else if (pictureid != null && albumid == null) // uložení konkrétní fotky do jakéhokoliv alba // nefuknèní
+                                {
+                                    PictureIdReceived = pictureid;
+                                    //StoredFileAlbum = await _context.StoredFileAlbums.Include(a => a.Album).ToListAsync();
+                                    var albumPictureRecord = new StoredFileAlbum
+                                    {
+                                        AlbumId = StoredFileAlbum.Album.AlbumId,
+                                        PictureId = PictureIdReceived
+                                    };
+
+                                    _context.StoredFileAlbums.Add(albumPictureRecord);
+                                    await _context.SaveChangesAsync();
+                                }
+
+
                                 await _context.SaveChangesAsync();
                                 var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
                                 // pod tímto klíèem se soubor uloží i fyzicky na disk

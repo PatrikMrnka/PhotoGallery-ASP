@@ -14,6 +14,8 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Album.AlbumId" />
+            <input type="hidden" asp-for="Album.CreationDate" />
+            <input type="hidden" asp-for="Album.UploaderId" />
             <div class="form-group">
                 <label asp-for="Album.Name" class="control-label"></label>
                 <input asp-for="Album.Name" class="form-control" />
@@ -23,11 +25,6 @@
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Album.IsPublic" /> @Html.DisplayNameFor(model => model.Album.IsPublic)
                 </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Album.CreationDate" class="control-label"></label>
-                <input asp-for="Album.CreationDate" class="form-control" />
-                <span asp-validation-for="Album.CreationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

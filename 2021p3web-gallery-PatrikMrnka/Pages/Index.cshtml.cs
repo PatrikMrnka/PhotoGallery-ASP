@@ -18,9 +18,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         [TempData]
         public string ErrorMessage { get; set; }
         public List<StoredFileListViewModel> Files { get; set; } = new();
-
-
-
+        public ICollection<Album> Albums { get; set; }
+        public ICollection<Album> AlbumPublic { get; set; }
+        public bool IsPublicPicturesCountNull { get; set; }
+        public bool IsPublicAlbumCountNull { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IWebHostEnvironment environment, ApplicationDbContext context)
         {
@@ -31,6 +32,11 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
         public void OnGet()
         {
+            IsPublicPicturesCountNull = _context.Files.Where(a => a.IsPublic == true).ToList().Count > 0;
+            IsPublicAlbumCountNull = _context.Albums.Where(a => a.IsPublic == true).ToList().Count > 0;
+
+            AlbumPublic = _context.Albums.Where(a => a.IsPublic == true).ToList();
+
             Files = _context.Files
                 .AsNoTracking()
                 .Include(f => f.Uploader)

@@ -1,21 +1,36 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Titulní strana";
 }
 
 <h1>Nejnovější obrázky</h1>
 
-@if (Model.Files.Where(a => a.IsPublic == true).ToList().Count > 0)
+@if (Model.IsPublicPicturesCountNull)
 {
-    @foreach (var f in Model.Files.Take(12).Reverse())
+    @foreach (var f in Model.Files.Where(a => a.IsPublic == true).Take(12).Reverse())
     {
             <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
+            <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>
     }
 }
 else
 {
-    <p>There are no files uploaded yet.</p>
+    <p>Nejsou tu žádné nejnovější obrázky.</p>
+}
+
+<h1>Veřejná alba</h1>
+
+@if (Model.IsPublicAlbumCountNull)
+{
+    @foreach (var a in Model.AlbumPublic)
+    {
+        <p><a asp-page="/Albums/Specific/Index" asp-route-id="@a.AlbumId" asp-route-name="@a.Name">@a.Name</a></p>
+    }
+}
+else
+{
+    <p>Nejsou tu žádné veřejná alba</p>
 }
 @*            @foreach (var f in Model.Files)
             {

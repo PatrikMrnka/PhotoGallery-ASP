@@ -1,0 +1,81 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specific.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Model.AlbumName</h1>
+<p>Počet obrázků: @Model.PictureInAlbumCount</p>
+<p><a asp-page="/Upload" asp-route-albumid="@Model.AlbumId">Přidat obrázek do alba</a>  @Model.AlbumName</p>
+
+@if (Model.AlbumId == null)
+{
+    <p>@Model.ErrorMessage</p>
+}
+else if (Model.AlbumId != null)
+{
+    @if (Model.PictureInAlbumCount > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Obrázek</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                    @foreach (var a in Model.Pictures)
+                    {
+                        <tr>
+                            <td>@a.Picture.OriginalName</td>
+
+                            <td><a asp-page="/Upload" asp-route-pictureid="@a.Picture.Id">Přidat obrázek do alba</a></td>
+                            <td><a>Smazat obrázek</a></td>
+                            <td><a>Smazat obrázek z alba</a></td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    }
+    else if (Model.PictureInAlbumCount == 0)
+    {
+        <p>V albu nejsou žádné obrázky.</p>
+    }
+}
+
+@*@if (Model.AlbumId != null)
+{
+    <p><a asp-route-id="@Model.AlbumId" asp-page="/Upload">Přidat obrázek do galerie</a></p>
+    @if (Model.PictureInAlbumCount > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Album</th>
+                    <th>Obrázek</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.StoredFileAlbum) {
+                    <tr>
+                        <td>@a.Album.AlbumId</td>
+                        <td>@a.Picture.OriginalName</td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                         </td>
+        </tr>
+}
+    </tbody>
+    </table>
+
+}
+}
+else
+{
+    <p>@Model.ErrorMessage</p>
+}
+*@

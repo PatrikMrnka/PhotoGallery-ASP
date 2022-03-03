@@ -118,13 +118,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e9cb7ec-265f-4533-90ca-2fccc1c93812",
+                            ConcurrencyStamp = "d96dc878-2ce5-4abe-b5cf-d7282d8a57b9",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB8nxCQj1bNoCJoxbzdq9/xk1my3VCUnNDO/+BUtjAg1uEg/xBtIR/8s3W0PEZZc1g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEWSP80+Kx6pGAGsF6jiUoBnP2+P7mnHnzWM2RTsvku9JS/DL9RsBfOYiYv73l68pw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -165,10 +165,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFileAlbum", b =>
                 {
-                    b.Property<Guid>("PictureId")
+                    b.Property<Guid?>("PictureId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AlbumId")
+                    b.Property<Guid?>("AlbumId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ApplicationUserId")
@@ -230,7 +230,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "666c85e6-8c3f-446d-a342-9965037bc22c",
+                            ConcurrencyStamp = "cf6a1e80-183d-4604-bc4b-2274369abf5d",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

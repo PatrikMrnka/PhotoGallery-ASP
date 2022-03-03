@@ -1,0 +1,42 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Test.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFileAlbum[0].Album)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StoredFileAlbum[0].Picture)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.StoredFileAlbum) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Album.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Picture.ContentType)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Vytvořit nové album</h1>
 
 <h4>Album</h4>
 <hr />
@@ -13,28 +13,18 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Album.CreationDate" />
+            <input type="hidden" asp-for="Album.UploaderId" />
             <div class="form-group">
                 <label asp-for="Album.Name" class="control-label"></label>
                 <input asp-for="Album.Name" class="form-control" />
                 <span asp-validation-for="Album.Name" class="text-danger"></span>
             </div>
-            @*<div class="form-group form-check">
+            <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Album.IsPublic" /> @Html.DisplayNameFor(model => model.Album.IsPublic)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="Album.CreationDate" class="control-label"></label>
-                <input asp-for="Album.CreationDate" class="form-control" />
-                <span asp-validation-for="Album.CreationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Album.UploaderId" class="control-label"></label>
-                <select asp-for="Album.UploaderId" class ="form-control" asp-items="ViewBag.UploaderId"></select>
-            </div>*@
-            <input type="hidden" asp-for="Album.IsPublic" />
-            <input type="hidden" asp-for="Album.CreationDate" />
-            <input type="hidden" asp-for="Album.UploaderId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

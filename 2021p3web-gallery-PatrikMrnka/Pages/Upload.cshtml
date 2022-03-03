@@ -4,7 +4,9 @@
 }
 <h1>Nahrát soubor</h1>
 <hr />
-<div class="row">
+@if (@Model.AlbumIdReceived == null && @Model.PictureIdReceived == null) // obyčejný upload obrázku do Výchozího album
+{
+    <div class="row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">
@@ -17,4 +19,44 @@
             </div>
         </form>
     </div>
-</div>
+    </div>
+}
+else if (@Model.AlbumIdReceived != null && @Model.PictureIdReceived == null) // upravený upload obrázku do určitého odkázaného alba
+{
+        <div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="Upload" class="control-label">File</label>
+                <input type="file" asp-for="Upload" class="form-control-file" multiple required />
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="StoredFile.IsPublic" /> @Html.DisplayNameFor(model => model.StoredFile.IsPublic)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="/Index">Back</a>
+            </div>
+        </form>
+    </div>
+    </div>
+}
+else if (@Model.PictureIdReceived != null && @Model.AlbumIdReceived == null) // upravený upload určitého odkázaného obrázku do alba (zvolíme)
+{
+    <div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group"> @*nefunkční*@
+                <label asp-for="StoredFileAlbum.Album.AlbumId" class="control-label"></label>
+                <select asp-for="StoredFileAlbum.Album.AlbumId" class ="form-control" asp-items="ViewBag.AlbumId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="/Index">Back</a>
+            </div>
+        </form>
+    </div>
+    </div>
+}
