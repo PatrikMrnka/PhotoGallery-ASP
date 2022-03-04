@@ -40,6 +40,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specific
         [BindProperty]
         public Album Album { get; set; }
         [BindProperty]
+        public IList<Album> Albums { get; set; }
+        [BindProperty]
         public StoredFile StoredFile { get; set; }
         [BindProperty]
         public Thumbnail Thumbnail { get; set; }
@@ -49,6 +51,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specific
             AlbumId = id;
             AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault();
 
+            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == id).FirstOrDefaultAsync();
 
             if (id == null)
             {

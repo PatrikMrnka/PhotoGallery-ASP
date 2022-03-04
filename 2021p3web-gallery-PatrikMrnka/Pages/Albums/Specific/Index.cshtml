@@ -11,6 +11,9 @@
 @if(Model.AlbumIdDefault != Model.AlbumId)
 {
     <p><a asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.AlbumId">Smazat album</a></p>
+
+    <p>@Html.DisplayFor(modelItem => Model.Album.IsPublic)</p>
+
 }
 
 @if (Model.AlbumId == null)

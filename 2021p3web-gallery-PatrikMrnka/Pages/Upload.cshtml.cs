@@ -74,7 +74,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                 UploaderId = userId,
                                 UploadedAt = DateTime.Now,
                                 ContentType = uploadedFile.ContentType,
-                                IsPublic = false
+                                IsPublic = StoredFile.IsPublic
                             };
 
                             fileRecord.Thumbnails = new List<Thumbnail>();
