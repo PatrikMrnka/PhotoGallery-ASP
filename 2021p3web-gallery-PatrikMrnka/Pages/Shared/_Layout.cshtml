@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/_2021p3web_gallery_PatrikMrnka.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" />
 </head>
 <body>
-    <header>
+@*    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">_2021p3web_gallery_PatrikMrnka</a>
@@ -46,18 +47,37 @@
             @RenderBody()
         </main>
     </div>
+    </header>*@
+
+    <header>
+        <ul class="nav_ul">
+            <li class="nav_left iCloud"><a asp-page="/Index">iCloud Fotky</a></li>
+            <li class="nav_left"><a asp-page="/Pictures/Index">Fotky</a></li>
+            <li class="nav_left"><a asp-page="/Albums/Index">Alba</a></li>
+            <partial name="_LoginPartial" />
+            @*<li class="nav_right"><a href="">Přihlásit</a></li>
+            <li class="nav_right"><a href="">Zaregistrovat</a></li>*@
+        </ul>
     </header>
+            <div class="container">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - _2021p3web_gallery_PatrikMrnka - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -31,6 +31,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
@@ -118,13 +121,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d96dc878-2ce5-4abe-b5cf-d7282d8a57b9",
+                            ConcurrencyStamp = "9a1b1049-d445-4bb2-8956-3cffce16515f",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEWSP80+Kx6pGAGsF6jiUoBnP2+P7mnHnzWM2RTsvku9JS/DL9RsBfOYiYv73l68pw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDaWCYS1YGV8B+diwdRRJyCErndgRD7psQnMjMj1QTMSw2JHWgz1WZ2cO1ekUOCjoQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -230,7 +233,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "cf6a1e80-183d-4604-bc4b-2274369abf5d",
+                            ConcurrencyStamp = "f72b5823-b30a-49d2-bf5c-3b1985fb9b5f",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

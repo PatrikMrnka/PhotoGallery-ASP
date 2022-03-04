@@ -4,14 +4,14 @@
     ViewData["Title"] = "Titulní strana";
 }
 
-<h1>Nejnovější obrázky</h1>
+<h1>Nejnovější veřejné obrázky</h1>
 
-@if (Model.IsPublicPicturesCountNull)
+@if (Model.PublicPicturesCount > 0) @*pokud jsou vytvořena veřejné fotky*@
 {
-    @foreach (var f in Model.Files.Where(a => a.IsPublic == true).Take(12).Reverse())
+    @foreach (var f in Model.Files.Where(a => a.IsPublic == true).Take(12).Reverse()) @*vypiš 12 fotek, které jsou veřejné*@
     {
             <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
-            <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>
+@*            <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>*@
     }
 }
 else
@@ -19,11 +19,11 @@ else
     <p>Nejsou tu žádné nejnovější obrázky.</p>
 }
 
-<h1>Veřejná alba</h1>
+<h1>Veřejná alba</h1> @*Všechna veřejná alba*@
 
-@if (Model.IsPublicAlbumCountNull)
+@if (Model.PublicAlbumCount > 0) @*pokud jsou vytvořena veřejná alba*@
 {
-    @foreach (var a in Model.AlbumPublic)
+    @foreach (var a in Model.AlbumPublic) @*vypiš veřejná alba*@
     {
         <p><a asp-page="/Albums/Specific/Index" asp-route-id="@a.AlbumId" asp-route-name="@a.Name">@a.Name</a></p>
     }
@@ -32,6 +32,7 @@ else
 {
     <p>Nejsou tu žádné veřejná alba</p>
 }
+
 @*            @foreach (var f in Model.Files)
             {
                 <tr>
@@ -44,5 +45,4 @@ else
             }
         </tbody>
     </table>*@
-}
 

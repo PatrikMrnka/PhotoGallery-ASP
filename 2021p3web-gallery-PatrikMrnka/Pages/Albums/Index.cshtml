@@ -18,21 +18,13 @@
     <thead>
         <tr>
             <th>Název</th>
-            <th>Veřejné </th>
-            <th>Datum publikace </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Album) {
+@foreach (var item in Model.Albums) {
         <tr>
 
-            <td><a asp-page="./Specific/Index" asp-route-id="@item.AlbumId" asp-route-name="@item.Name">@item.Name</a></td>
-            <td>@item.IsPublic</td>
-            <td>@item.CreationDate</td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AlbumId">Edit</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AlbumId">Delete</a>
-            </td>
+            <td><a asp-page="./Specific/Index" asp-route-id="@item.AlbumId">@item.Name</a></td>
         </tr>
 }
     </tbody>

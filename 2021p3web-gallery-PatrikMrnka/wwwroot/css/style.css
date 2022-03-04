@@ -1,17 +1,79 @@
-﻿a .navbar_title {
-    display: flex;
+﻿@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap');
+
+body {
+    margin: 0px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+header {
+    margin-bottom: 1.5em;
+}
+
+ul.nav_ul {
+    position: -webkit-sticky;
+    position: sticky;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f3f3f3;
+}
+
+    ul.nav_ul li.nav_left {
+        float: left;
+    }
+
+.nav_left.iCloud {
+    margin-right: 2em;
+    margin-left: 1em;
+}
+
+/*ul.nav_ul li.nav_right.button {
+    margin-top: 5px;
+}*/
+
+ul.nav_ul li a {
+    display: block;
+    color: #8d8d8d;
+    text-align: center;
+    padding: 14px 16px;
+    margin: 5px;
     text-decoration: none;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
+    -webkit-transition: color 1s;
+    transition: color 1s;
 }
-.navbar_title_icloud {
-    font-size: 35px;
+
+    ul.nav_ul li a:hover {
+        color: black;
+    }
+
+ul.nav_ul li button {
+    display: block;
+    color: #8d8d8d;
+    text-align: center;
+    padding: 14px 16px;
+    margin: 5px;
+    text-decoration: none;
+    -webkit-transition: color 1s;
+    transition: color 1s;
+    border: none;
+    background: none;
 }
-.navbar_title_fotky {
-    font-size: 40px;
+
+    ul.nav_ul li button:hover {
+        color: black;
+    }
+
+li.nav_right {
+    float: right;
 }
-.header_flex {
-    display: flex;
-    flex-direction: row;
+
+.title_newestP {
+    text-align: center;
+    font-size: 30px;
+}
+
+img {
 }

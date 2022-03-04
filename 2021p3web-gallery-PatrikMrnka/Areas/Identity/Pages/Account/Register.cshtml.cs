@@ -141,6 +141,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Areas.Identity.Pages.Account
                         Name = "Výchozí",
                         CreationDate = DateTime.Now,
                         IsPublic = false,
+                        IsDefault = true,
                         UploaderId = userId
                     };
 

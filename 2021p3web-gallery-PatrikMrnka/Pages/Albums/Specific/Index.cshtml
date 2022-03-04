@@ -7,7 +7,11 @@
 
 <h1>@Model.AlbumName</h1>
 <p>Počet obrázků: @Model.PictureInAlbumCount</p>
-<p><a asp-page="/Upload" asp-route-albumid="@Model.AlbumId">Přidat obrázek do alba</a>  @Model.AlbumName</p>
+<p><a asp-page="/Upload" asp-route-albumid="@Model.AlbumId">Přidat obrázek do alba</a></p>
+@if(Model.AlbumIdDefault != Model.AlbumId)
+{
+    <p><a asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.AlbumId">Smazat album</a></p>
+}
 
 @if (Model.AlbumId == null)
 {
@@ -31,8 +35,12 @@ else if (Model.AlbumId != null)
                             <td>@a.Picture.OriginalName</td>
 
                             <td><a asp-page="/Upload" asp-route-pictureid="@a.Picture.Id">Přidat obrázek do alba</a></td>
-                            <td><a>Smazat obrázek</a></td>
-                            <td><a>Smazat obrázek z alba</a></td>
+                            <td><a asp-page-handler="DeletePhoto" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek</a></td> 
+                            @if (Model.AlbumId != Model.AlbumIdDefault) // když vymažu z výchozího alba fotku, tak zůstane fotka bez alba viset
+                        {
+                            <td><a asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek z alba</a></td>
+                        }
+
                         </tr>
                     }
             </tbody>

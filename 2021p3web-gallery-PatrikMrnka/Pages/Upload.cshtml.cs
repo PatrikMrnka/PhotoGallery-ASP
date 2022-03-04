@@ -2,12 +2,11 @@ using _2021p3web_gallery_PatrikMrnka.Data;
 using _2021p3web_gallery_PatrikMrnka.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SixLabors.ImageSharp.Formats;
-using System.Security.Claims;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Processing;
+using System.Security.Claims;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages
 {
@@ -41,15 +40,15 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             _environment = environment;
             _context = context;
             _configuration = configuration;
-            if (Int32.TryParse(_configuration["Thumbnails:SquareSize"], out _squareSize) == false) _squareSize = 64; // získej data z konfigurace nebo použij 64
-            if (Int32.TryParse(_configuration["Thumbnails:SameAspectRatioHeigth"], out _sameAspectRatioHeigth) == false) _sameAspectRatioHeigth = 128;
+            if (Int32.TryParse(_configuration["Thumbnails:SquareSize"], out _squareSize) == false) _squareSize = 320; // získej data z konfigurace nebo použij 64
+            if (Int32.TryParse(_configuration["Thumbnails:SameAspectRatioHeigth"], out _sameAspectRatioHeigth) == false) _sameAspectRatioHeigth = 320;
 
         }
         public void OnGet(Guid? albumid, Guid? pictureid)
         {
             AlbumIdReceived = albumid;
             PictureIdReceived = pictureid;
-            ViewData["AlbumId"] = new SelectList(_context.StoredFileAlbums, "AlbumId", "Name");
+            //ViewData["AlbumId"] = new SelectList(_context.StoredFileAlbums, "AlbumId", "Name");
         }
 
         public async Task<IActionResult> OnPostAsync(Guid? albumid, Guid? pictureid)
@@ -111,9 +110,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
                                 _context.Files.Add(fileRecord); // uložení záznamu do databáze
                                 await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
-                                if (albumid == null) // uložení fotky do výchozího alba
+                                AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího 
+                                if (albumid == null && albumid != AlbumIdDefault) // uložení fotky do výchozího alba
                                 {
-                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.Name == "Výchozí").Select(a => a.AlbumId).FirstOrDefault();
+                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
 
                                     var albumPictureRecord = new StoredFileAlbum
                                     {
@@ -124,9 +124,19 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                     _context.StoredFileAlbums.Add(albumPictureRecord); 
                                     await _context.SaveChangesAsync();
                                 }
-                                else if (albumid != null) // uložení fotky do konkrétního alba
-                                { 
-                                    var albumPictureRecord = new StoredFileAlbum
+                                else if (albumid != null && albumid != AlbumIdDefault) // uložení fotky do konkrétního alba - uloží se i do výchozího
+                                {
+                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
+                                    var albumPictureRecordDefault = new StoredFileAlbum // uložení do výchozího alba
+                                    {
+                                        AlbumId = AlbumIdDefault,
+                                        PictureId = fileRecord.Id
+                                    };
+
+                                    _context.StoredFileAlbums.Add(albumPictureRecordDefault);
+                                    await _context.SaveChangesAsync();
+
+                                    var albumPictureRecord = new StoredFileAlbum // uložení do konkrétního alba
                                     {
                                         AlbumId = AlbumIdReceived,
                                         PictureId = fileRecord.Id
@@ -135,21 +145,19 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                     _context.StoredFileAlbums.Add(albumPictureRecord);
                                     await _context.SaveChangesAsync();
                                 }
-                                else if (pictureid != null && albumid == null) // uložení konkrétní fotky do jakéhokoliv alba // nefuknèní
+                                else if (albumid != null && albumid == AlbumIdDefault) // uložení do výchozího alba
                                 {
-                                    PictureIdReceived = pictureid;
-                                    //StoredFileAlbum = await _context.StoredFileAlbums.Include(a => a.Album).ToListAsync();
+                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault();
+
                                     var albumPictureRecord = new StoredFileAlbum
                                     {
-                                        AlbumId = StoredFileAlbum.Album.AlbumId,
-                                        PictureId = PictureIdReceived
+                                        AlbumId = AlbumIdDefault,
+                                        PictureId = fileRecord.Id
                                     };
 
                                     _context.StoredFileAlbums.Add(albumPictureRecord);
                                     await _context.SaveChangesAsync();
                                 }
-
-
                                 await _context.SaveChangesAsync();
                                 var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
                                 // pod tímto klíèem se soubor uloží i fyzicky na disk

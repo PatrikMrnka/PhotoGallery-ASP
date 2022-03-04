@@ -24,7 +24,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
             _context = context;
         }
 
-        public IList<Album> Album { get; set; }
+        public Album Album { get; set; }
+        public Guid AlbumDefaultId { get; set; }
+        public string ErrorMessage { get; set; }
+        public IList<Album> Albums { get; set; }
         public IList<Album> AlbumPublic { get; set; }
         public IList<StoredFileAlbum> StoredFileAlbum { get; set; }
         public int PicturesInAlbum { get; set; }
@@ -33,11 +36,34 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
         public async Task OnGetAsync()
         {
             var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-            AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.Name != "Výchozí").Count(); // Počet soukromých alb mimo Výchozí album
-            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync(); 
+            AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Count(); // Počet soukromých alb
+            Albums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+            AlbumDefaultId = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefaultAsync();
 
             //Album = await _context.Albums
             //    .Include(a => a.Uploader).ToListAsync();
+        }
+
+        public async Task<IActionResult> OnGetDelete(Guid? albumid)
+        {
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+
+            if (albumid == null)
+            {
+                return Page();
+            }
+            else if (albumid == AlbumDefaultId)
+            {
+                ErrorMessage = "Nelze vymazat výchozí album.";
+                return Page();
+            }
+            else
+            { 
+                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                _context.Albums.Remove(Album);
+                await _context.SaveChangesAsync();
+                return Page();
+            }
         }
     }
 }

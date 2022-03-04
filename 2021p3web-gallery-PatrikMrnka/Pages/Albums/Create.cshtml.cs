@@ -45,7 +45,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
             {
                 Name = Album.Name,
                 CreationDate = DateTime.Now,
-                IsPublic = false,
+                IsPublic = Album.IsPublic,
                 UploaderId = userId
             };
 

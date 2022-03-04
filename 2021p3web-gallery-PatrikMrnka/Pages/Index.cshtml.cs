@@ -20,8 +20,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         public List<StoredFileListViewModel> Files { get; set; } = new();
         public ICollection<Album> Albums { get; set; }
         public ICollection<Album> AlbumPublic { get; set; }
-        public bool IsPublicPicturesCountNull { get; set; }
-        public bool IsPublicAlbumCountNull { get; set; }
+        public int? PublicPicturesCount { get; set; }
+        public int? PublicAlbumCount { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IWebHostEnvironment environment, ApplicationDbContext context)
         {
@@ -32,10 +32,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
         public void OnGet()
         {
-            IsPublicPicturesCountNull = _context.Files.Where(a => a.IsPublic == true).ToList().Count > 0;
-            IsPublicAlbumCountNull = _context.Albums.Where(a => a.IsPublic == true).ToList().Count > 0;
+            PublicPicturesCount = _context.Files.Where(a => a.IsPublic == true).ToList().Count(); // počet veřejných fotek
+            PublicAlbumCount = _context.Albums.Where(a => a.IsPublic == true).ToList().Count(); // počet veřejných alb
 
-            AlbumPublic = _context.Albums.Where(a => a.IsPublic == true).ToList();
+            AlbumPublic = _context.Albums.Where(a => a.IsPublic == true).ToList(); // list veřejných alb
 
             Files = _context.Files
                 .AsNoTracking()
@@ -54,6 +54,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                     IsPublic = f.IsPublic
                 })
                 .ToList();
+
         }
         //public IActionResult OnGetDownload(string filename)
         //{
