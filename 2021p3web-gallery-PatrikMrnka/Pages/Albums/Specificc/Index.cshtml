@@ -5,11 +5,11 @@
     ViewData["Title"] = "Index";
 }
 
-@if (@Model.AlbumIdReceived == null)
+@if (Model.AlbumIdReceived == null)
 {
     <p>@Model.NotFoundAlbum</p>
 }
-else if (@Model.AlbumIdReceived != null)
+else if (Model.AlbumIdReceived != null)
 {
     <h1>@Model.Album.Name</h1>
     <p>Počet fotek: @Model.PicturesInAlbum</p>
@@ -20,7 +20,23 @@ else if (@Model.AlbumIdReceived != null)
             <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
                 <button>Smazat album</button>
             </form>
-    </p>
+        </p>
+        @if (Model.IsAlbumPublic == true)
+        {
+            <p>
+                <form asp-page-handler="MakeAlbumPrivate" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                    <button>Nastavit jako soukromé</button>
+                </form>
+            </p>
+        }
+        else if (Model.IsAlbumPublic == false)
+        {
+            <p>
+                <form asp-page-handler="MakeAlbumPublic" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                    <button>Nastavit jako veřejné</button>
+                </form>
+            </p>
+        }
     }
 
     @if (Model.PicturesInAlbum < 0)
@@ -40,6 +56,21 @@ else if (@Model.AlbumIdReceived != null)
                 {
                     <tr>
                         <td>@a.Picture.OriginalName</td>
+                        <td>
+                            @if (Model.AlbumIdReceived == Model.AlbumIdDefault)
+                            {
+                                <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
+                                    <button>Vymazat fotku</button>
+                                </form>
+                            }
+
+                            else if (Model.AlbumIdReceived != Model.AlbumIdDefault)
+                            {
+                                <form asp-page-handler="DeletePhotoAlbum" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
+                                    <button>Vymazat fotku z alba</button>
+                                </form>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
