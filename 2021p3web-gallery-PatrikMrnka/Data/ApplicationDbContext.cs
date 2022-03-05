@@ -20,7 +20,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Data
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             base.OnModelCreating(builder);
-            builder.Entity<Thumbnail>().HasKey(t => new { t.FileId, t.Type });
+            //builder.Entity<Thumbnail>().HasKey(t => new { t.FileId, t.Type });
 
             builder.Entity<StoredFileAlbum>().HasKey(a => new { a.PictureId, a.AlbumId });
 

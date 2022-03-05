@@ -233,12 +233,11 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                 columns: table => new
                 {
                     FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
                     Blob = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Thumbnails", x => new { x.FileId, x.Type });
+                    table.PrimaryKey("PK_Thumbnails", x => x.FileId);
                     table.ForeignKey(
                         name: "FK_Thumbnails_Files_FileId",
                         column: x => x.FileId,
@@ -250,12 +249,12 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "a824862a-ce0d-4ff0-86e1-59e691f8e0e2", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "66053523-095c-4c69-82fc-9cf12283e42b", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "34bf6117-e080-4ab1-b76e-eb1e43d90471", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEBdZ3Fd3OIT33ADeAAdxWvPIt3Q6pnLiQ/N2JjXmUUfI51UQLJCtnLpkJdj1Jb6bnA==", null, false, "", false, "administrator@gmail.com" });
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "f369768f-9c92-491b-b776-a5916518c279", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEEtqA9UVncnF5wQmZI77deUwsJsFBKsclT/hOpBM/pV9DMuXYDBgE0yVbzz/VWHj8g==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

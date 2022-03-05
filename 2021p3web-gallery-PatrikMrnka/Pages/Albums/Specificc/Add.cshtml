@@ -1,0 +1,32 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc.AddModel
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+@if (Model.PictureIdReceived == null)
+{
+    <p>@Model.NotFoundPicture</p>
+}
+else if (Model.PictureIdReceived != null)
+{
+    <h1>Přidat @Model.PictureName do alba</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Album</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var item in Model.PicturesAlbum)
+                {
+                    <td>@item.Album.</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+

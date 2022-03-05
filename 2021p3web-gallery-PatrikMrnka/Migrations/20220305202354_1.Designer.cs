@@ -12,7 +12,7 @@ using _2021p3web_gallery_PatrikMrnka.Data;
 namespace _2021p3web_gallery_PatrikMrnka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220305153122_1")]
+    [Migration("20220305202354_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,13 +123,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34bf6117-e080-4ab1-b76e-eb1e43d90471",
+                            ConcurrencyStamp = "f369768f-9c92-491b-b776-a5916518c279",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBdZ3Fd3OIT33ADeAAdxWvPIt3Q6pnLiQ/N2JjXmUUfI51UQLJCtnLpkJdj1Jb6bnA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEtqA9UVncnF5wQmZI77deUwsJsFBKsclT/hOpBM/pV9DMuXYDBgE0yVbzz/VWHj8g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -193,14 +193,11 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                     b.Property<Guid>("FileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Blob")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.HasKey("FileId", "Type");
+                    b.HasKey("FileId");
 
                     b.ToTable("Thumbnails");
                 });
@@ -235,7 +232,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "a824862a-ce0d-4ff0-86e1-59e691f8e0e2",
+                            ConcurrencyStamp = "66053523-095c-4c69-82fc-9cf12283e42b",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

@@ -1,0 +1,49 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc.PictureModel
+
+@{
+    ViewData["Title"] = "Picture";
+}
+
+@if(Model.PictureIdReceived == null)
+{
+    <h1>Veřejné fotky</h1>
+    
+    @foreach (var f in Model.Files)
+    {
+            <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
+    }
+}
+else if (Model.PictureIdReceived != null )
+{
+    <div class="picture_flex_container">
+        <div class="flex_item picture_container">
+            <div class="photo_container">
+                <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
+            </div>
+        </div>
+        <div class="flex-item">
+            <div class="picture_action_description_flex_container">
+                <div class="picture_description">
+                    <h1>Popis</h1>
+                    <p>@Model.PictureName</p>
+                    <p>@Model.PictureDate</p>
+                    <p>@Model.PictureOwner</p>
+                </div>
+                <div class="picture_action">
+                    <h2>Akce</h2>
+                    @if (Model.PictureOwner == true)
+                    {
+                        
+                    }
+                    <div class="picture_action_flex_container">
+                        <form>
+                            <button class="btn-gradient-1">Smazat obrázek</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

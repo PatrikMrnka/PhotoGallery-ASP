@@ -9,14 +9,14 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
         public StoredFile File { get; set; }
         [Key]
         public Guid FileId { get; set; }
-        [Key]
-        public ThumbnailType Type { get; set; }
+        //[Key]
+        //public ThumbnailType Type { get; set; }
         public byte[] Blob { get; set; }
     }
     
-    public enum ThumbnailType
-    {
-        Square,
-        SameAspectRatio
-    }
+    //public enum ThumbnailType
+    //{
+    //    Square,
+    //    SameAspectRatio
+    //}
 }

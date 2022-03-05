@@ -81,7 +81,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
         //    }
         //}
 
-        public async Task<IActionResult> OnGetThumbnail(string filename, ThumbnailType type = ThumbnailType.Square)
+        public async Task<IActionResult> OnGetThumbnail(string filename)
         {
             StoredFile file = await _context.Files
               .AsNoTracking()
@@ -93,7 +93,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             }
             Thumbnail thumbnail = await _context.Thumbnails
               .AsNoTracking()
-              .Where(t => t.FileId == Guid.Parse(filename) && t.Type == type)
+              .Where(t => t.FileId == Guid.Parse(filename))
               .SingleOrDefaultAsync();
             if (thumbnail != null)
             {

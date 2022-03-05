@@ -55,22 +55,31 @@ else if (Model.AlbumIdReceived != null)
                 @foreach (var a in Model.PicturesAlbum)
                 {
                     <tr>
-                        <td>@a.Picture.OriginalName</td>
-                        <td>
+                        <td><a asp-page="../../Picture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="Model.Album.AlbumId">@a.Picture.OriginalName</a></td>
+                        <td><a asp-page="./Add" asp-route-pictureid="@a.Picture.Id">Přidat do alba</a></td>
+
                             @if (Model.AlbumIdReceived == Model.AlbumIdDefault)
                             {
-                                <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
-                                    <button>Vymazat fotku</button>
-                                </form>
+                                <td>
+                                    <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
+                                        <button>Vymazat fotku</button>
+                                    </form>
+                                </td>
                             }
 
                             else if (Model.AlbumIdReceived != Model.AlbumIdDefault)
                             {
-                                <form asp-page-handler="DeletePhotoAlbum" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
-                                    <button>Vymazat fotku z alba</button>
-                                </form>
+                                <td>
+                                    <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
+                                        <button>Vymazat fotku</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
+                                        <button>Vymazat fotku z alba</button>
+                                    </form>
+                                </td>
                             }
-                        </td>
                     </tr>
                 }
             </tbody>

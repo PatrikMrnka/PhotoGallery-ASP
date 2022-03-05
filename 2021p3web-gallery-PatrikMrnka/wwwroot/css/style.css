@@ -75,5 +75,51 @@ li.nav_right {
     font-size: 30px;
 }
 
-img {
+.picture_name {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.picture_flex_container {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2.5%;
+    gap: 15%;
+}
+
+.picture_action_description_flex_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.picture_action_flex_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.photo_container img {
+    width: 1000px;
+}
+
+.btn-gradient-1 {
+    border-width: 4px;
+    border-style: solid;
+    border-image: linear-gradient(to right, darkblue, darkorchid) 1;
+    margin-bottom: 10px;
+}
+
+.btn-gradient-1 {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: black;
+    padding: 10px;
+    cursor: pointer;
+    transition: color .2s;
 }

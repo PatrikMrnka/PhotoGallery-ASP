@@ -52,20 +52,3 @@ else if (@Model.AlbumIdReceived != null && @Model.PictureIdReceived == null) // 
     </div>
     </div>
 }
-else if (@Model.PictureIdReceived != null && @Model.AlbumIdReceived == null) // upravený upload určitého odkázaného obrázku do alba (zvolíme)
-{
-    <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div class="form-group"> @*nefunkční*@
-                <label asp-for="StoredFileAlbum.Album.AlbumId" class="control-label"></label>
-                <select asp-for="StoredFileAlbum.Album.AlbumId" class ="form-control" asp-items="ViewBag.AlbumId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Upload" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="/Index">Back</a>
-            </div>
-        </form>
-    </div>
-    </div>
-}
