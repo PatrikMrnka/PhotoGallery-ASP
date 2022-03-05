@@ -111,6 +111,15 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                 _context.Files.Add(fileRecord); // uložení záznamu do databáze
                                 await _context.SaveChangesAsync(); // vygeneruje se jeho klíè ve formátu Guid
                                 AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího 
+
+                                var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
+                                // pod tímto klíèem se soubor uloží i fyzicky na disk
+                                using (var fileStream = new FileStream(file, FileMode.Create))
+                                {
+                                    await uploadedFile.CopyToAsync(fileStream);
+                                };
+                                successfulProcessing++;
+
                                 if (albumid == null && albumid != AlbumIdDefault) // uložení fotky do výchozího alba
                                 {
                                     AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
@@ -144,6 +153,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
                                     _context.StoredFileAlbums.Add(albumPictureRecord);
                                     await _context.SaveChangesAsync();
+
+                                    return RedirectToPage("./Albums/Specificc/Index", new {albumid = albumid}); // vrátí se zpátky na album - passing parameter
                                 }
                                 else if (albumid != null && albumid == AlbumIdDefault) // uložení do výchozího alba
                                 {
@@ -158,14 +169,6 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                     _context.StoredFileAlbums.Add(albumPictureRecord);
                                     await _context.SaveChangesAsync();
                                 }
-                                await _context.SaveChangesAsync();
-                                var file = Path.Combine(_environment.ContentRootPath, "Uploads", fileRecord.Id.ToString());
-                                // pod tímto klíèem se soubor uloží i fyzicky na disk
-                                using (var fileStream = new FileStream(file, FileMode.Create))
-                                {
-                                    await uploadedFile.CopyToAsync(fileStream);
-                                };
-                                successfulProcessing++;
                             }
                             catch
                             {

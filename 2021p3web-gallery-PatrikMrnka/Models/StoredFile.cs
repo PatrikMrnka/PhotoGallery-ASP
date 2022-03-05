@@ -7,7 +7,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Models
     public class StoredFile
     {
         [Key]
-        public Guid Id { get; set; } // identifikátor souboru a název fyzického souboru
+        public Guid? Id { get; set; } // identifikátor souboru a název fyzického souboru
         [Required]
         public DateTime UploadedAt { get; set; } // datum a čas nahrání souboru
         [Required]

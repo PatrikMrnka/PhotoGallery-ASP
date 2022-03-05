@@ -2,7 +2,7 @@
 {
     public class StoredFileListViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public ApplicationUser Uploader { get; set; }
         public string UploaderId { get; set; }
         public DateTime UploadedAt { get; set; }

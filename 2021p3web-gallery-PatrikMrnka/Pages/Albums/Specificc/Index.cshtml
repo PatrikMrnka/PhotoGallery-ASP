@@ -1,0 +1,49 @@
+﻿@page
+@model _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (@Model.AlbumIdReceived == null)
+{
+    <p>@Model.NotFoundAlbum</p>
+}
+else if (@Model.AlbumIdReceived != null)
+{
+    <h1>@Model.Album.Name</h1>
+    <p>Počet fotek: @Model.PicturesInAlbum</p>
+    <p><a asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a></p>
+    @if (Model.AlbumIdDefault != Model.AlbumIdReceived)
+    {
+        <p>
+            <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                <button>Smazat album</button>
+            </form>
+    </p>
+    }
+
+    @if (Model.PicturesInAlbum < 0)
+    {
+        <p>Nejsou nahrány žádné fotky.</p>
+    }
+    else if (Model.PicturesInAlbum > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Obrázek</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.PicturesAlbum)
+                {
+                    <tr>
+                        <td>@a.Picture.OriginalName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+

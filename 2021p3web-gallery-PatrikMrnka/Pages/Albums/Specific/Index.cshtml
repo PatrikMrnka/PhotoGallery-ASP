@@ -10,10 +10,28 @@
 <p><a asp-page="/Upload" asp-route-albumid="@Model.AlbumId">Přidat obrázek do alba</a></p>
 @if(Model.AlbumIdDefault != Model.AlbumId)
 {
-    <p><a asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.AlbumId">Smazat album</a></p>
 
-    <p>@Html.DisplayFor(modelItem => Model.Album.IsPublic)</p>
-
+    <p>
+        <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.AlbumId" method="post">
+            <button>Smazat album</button>
+        </form>
+    </p>
+    @if(Model.AlbumPublic == true)
+    {
+        <p>
+            <form asp-page-handler="MakePrivateAlbum" asp-route-albumid="@Model.AlbumId" method="post">
+                <button> Nastavit jako soukromé</button>
+            </form>
+        </p>
+    }
+    else if(Model.AlbumPublic == false)
+    {
+        <p>
+            <form asp-page-handler="MakePublicAlbum" asp-route-albumid="@Model.AlbumId" method="post">
+                <button> Nastavit jako veřejné</button>
+            </form>
+        </p>
+    }
 }
 
 @if (Model.AlbumId == null)
@@ -38,10 +56,38 @@ else if (Model.AlbumId != null)
                             <td>@a.Picture.OriginalName</td>
 
                             <td><a asp-page="/Upload" asp-route-pictureid="@a.Picture.Id">Přidat obrázek do alba</a></td>
-                            <td><a asp-page-handler="DeletePhoto" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek</a></td> 
+                            @if (a.Picture.IsPublic == true)
+                        {
+                            <td>
+   @*                             <a asp-page-handler="MakePrivatePicture" asp-route-pictureid="@a.Picture.Id">Nastavit fotku jako soukromou</a>*@
+                                <form asp-page-handler="MakePrivatePicture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">
+                                    <button>Nastavit jako suokromé</button>
+                                </form>
+                            </td>
+                        }
+                        else if (a.Picture.IsPublic == false)
+                        {
+                            <td>
+                   @*             <a asp-page-handler="MakePublicPicture" asp-route-pictureid="@a.Picture.Id">Nastavit fotku jako veřejnou</a>*@
+                                <form asp-page-handler="MakePublicPicture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">
+                                    <button>Nastavit jako veřejné</button>
+                                </form>
+                            </td>
+                        }
+                        <td>
+@*                            <a asp-page-handler="DeletePhoto" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek</a>*@
+                            <form asp-page-handler="DeletePhoto" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">
+                                <button>Smazat obrázek</button>
+                            </form>
+                        </td> 
                             @if (Model.AlbumId != Model.AlbumIdDefault) // když vymažu z výchozího alba fotku, tak zůstane fotka bez alba viset
                         {
-                            <td><a asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek z alba</a></td>
+                            <td>
+                                @*<a type="submit" asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">Smazat obrázek z alba</a>*@
+                                <form asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.AlbumId">
+                                    <button>Smazat obrázek z alba</button>
+                                </form>
+                            </td>
                         }
 
                         </tr>
@@ -54,39 +100,3 @@ else if (Model.AlbumId != null)
         <p>V albu nejsou žádné obrázky.</p>
     }
 }
-
-@*@if (Model.AlbumId != null)
-{
-    <p><a asp-route-id="@Model.AlbumId" asp-page="/Upload">Přidat obrázek do galerie</a></p>
-    @if (Model.PictureInAlbumCount > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Album</th>
-                    <th>Obrázek</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var a in Model.StoredFileAlbum) {
-                    <tr>
-                        <td>@a.Album.AlbumId</td>
-                        <td>@a.Picture.OriginalName</td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                         </td>
-        </tr>
-}
-    </tbody>
-    </table>
-
-}
-}
-else
-{
-    <p>@Model.ErrorMessage</p>
-}
-*@

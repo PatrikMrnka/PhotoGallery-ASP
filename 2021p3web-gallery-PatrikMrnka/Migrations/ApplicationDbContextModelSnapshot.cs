@@ -121,13 +121,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a1b1049-d445-4bb2-8956-3cffce16515f",
+                            ConcurrencyStamp = "34bf6117-e080-4ab1-b76e-eb1e43d90471",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDaWCYS1YGV8B+diwdRRJyCErndgRD7psQnMjMj1QTMSw2JHWgz1WZ2cO1ekUOCjoQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBdZ3Fd3OIT33ADeAAdxWvPIt3Q6pnLiQ/N2JjXmUUfI51UQLJCtnLpkJdj1Jb6bnA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -137,7 +137,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
 
             modelBuilder.Entity("_2021p3web_gallery_PatrikMrnka.Models.StoredFile", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -233,7 +233,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "f72b5823-b30a-49d2-bf5c-3b1985fb9b5f",
+                            ConcurrencyStamp = "a824862a-ce0d-4ff0-86e1-59e691f8e0e2",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });
