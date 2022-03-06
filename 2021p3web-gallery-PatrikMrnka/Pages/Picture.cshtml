@@ -5,18 +5,38 @@
     ViewData["Title"] = "Picture";
 }
 
-@if(Model.PictureIdReceived == null)
+@if (Model.PictureIdReceived == null && Model.AlbumIdReceived == null) // pokud na stránku není odkazováno žádnou fotkou čí albwm - veřejné fotky (všechny)
 {
-    <h1>Veřejné fotky</h1>
-    
-    @foreach (var f in Model.Files)
-    {
-            <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
-    }
+    <h1 class="album_title">Veřejné fotky</h1>
+    <p class="album_PictureCount">Počet fotek: @Model.PublicPicturesCount</p>
+    <hr class="line_between">
+    <div class="album_actionButtons">
+        <div class="newest_photos">
+            @foreach (var f in Model.Files)
+            {
+                <a asp-page="./Picture" asp-route-pictureid="@f.Id">
+                    <div class="photo_container_index">
+                        <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+
 }
-else if (Model.PictureIdReceived != null )
+else if (Model.PictureIdReceived == null && Model.AlbumIdReceived != null) // je odkazováno pouze na album a na žádnou fotku - nevrací nic
 {
-    <div class="picture_flex_container">
+    <p>Je odkazováno pouze na album. Nelze zobrazit fotku.</p>
+}
+else if (Model.PictureIdReceived != null && Model.AlbumIdReceived == null) // pokud je odkaz pouze na fotku
+{
+    if (Model.PicturePublic == false && Model.PictureOwnerId != Model.UserId) // pokud není veřejná a ani nejsem její vlastník - nemohu ji zobrazit
+    {
+        <p>Nelze fotku zobrazit, není veřejná, nebo nejste vlastník</p>
+    }
+    else // pokud je buďto veřejná nebo jsem její vlastník
+    {
+@*     <div class="picture_flex_container">
         <div class="flex_item picture_container">
             <div class="photo_container">
                 <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
@@ -28,22 +48,163 @@ else if (Model.PictureIdReceived != null )
                     <h1>Popis</h1>
                     <p>@Model.PictureName</p>
                     <p>@Model.PictureDate</p>
-                    <p>@Model.PictureOwner</p>
+                    <p>@Model.PictureOwnerId</p>
                 </div>
                 <div class="picture_action">
                     <h2>Akce</h2>
-                    @if (Model.PictureOwner == true)
-                    {
-                        
-                    }
                     <div class="picture_action_flex_container">
-                        <form>
-                            <button class="btn-gradient-1">Smazat obrázek</button>
-                        </form>
+                        @if (Model.PictureOwnerId == Model.UserId) // pokud jsem její vlastník - je jedno jestli je veřejná - mohu smazat fotku všude, mohu ji nastavit veřejnou nebo soukromou a mohu si ji přidat do alba
+                            {
+                                <form>
+                                    <button class="btn-gradient-1">Smazat obrázek</button>
+                                </form>
+                                @if (Model.PicturePublic == true) // pokud je fotka veřejná
+                                {
+                                    <form>
+                                        <button class="btn-gradient-1">Nastavit na soukromou</button>
+                                    </form>
+                                }
+                                else if (Model.PicturePublic == false) // pokud je fotka soukromá
+                                {
+                                    <form>
+                                        <button class="btn-gradient-1">Nastavit na veřejnou</button>
+                                    </form>
+                                }
+                                <form>
+                                    <button class="btn-gradient-1">Přidat do alba</button>
+                                </form>
+                             }
+                             else if (Model.PictureOwnerId != Model.UserId) // pokud nejsem vlastník = (je veřejná) - mohu si ji přidat do alba
+                             {
+                                 <form>
+                                     <button class="btn-gradient-1">Přidat do alba</button>
+                                 </form>
+                             }
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>   *@
+    <div class="picture_flex">
+        <div class="picture_info">
+            <h1>@Model.Picture.OriginalName</h1>
+            <p>@Model.Picture.UploadedAt</p>
+            <p>@Model.Picture.UploaderId</p>
+            <div class="picture_action_buttons_flex">
+                <button class="btn-gradient-1">Smazat obrázek</button>
+                // ....
+            </div>
+        </div>
+        <hr>
+        <div class="picture_self">
+            <div class="photo_self_container">
+                <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
+            </div>
+        </div>
+    </div>
+    }
+}
+else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // pokud odkaz na fotku v albu - pokud nejsem její vlastník a není veřejná - nelze zobrazit
+{
+    @if(Model.PictureOwnerId != Model.UserId && Model.PicturePublic == false) // pokud nejsem vlastník ani není veřejná - nemohu ji zobrazit
+    {
+        <p>Nelze fotku v albu zobrazit, není veřejná nebo nejste vlastník.</p>
+    }
+    else if (Model.PictureOwnerId == Model.UserId || Model.PicturePublic == true) // pokud jsem buďto její vlastník nebo je veřejná
+    {
+        <div class="picture_flex_container">
+            <div class="flex_item picture_container">
+                <div class="photo_container">
+                    <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
+                </div>
+            </div>
+            <div class="flex-item">
+                <div class="picture_action_description_flex_container">
+                    <div class="picture_description">
+                        <h1>Popis</h1>
+                        <p>@Model.PictureName</p>
+                        <p>@Model.PictureDate</p>
+                        <p>@Model.PictureOwnerId</p>
+                    </div>
+                    <div class="picture_action">
+                        <h2>Akce</h2>
+                        <div class="picture_action_flex_container">
+                            @if(Model.PictureOwnerId == Model.UserId) // pokud jsem vlastník fotky - je jedno jestli je veřejná nebo ne (jsem BOSS fotky, mohu si dělat co chci)
+                            {
+                                //pokud jsem vlastník fotky i alba - mohu si dělat cokoliv 
+                                @if(Model.AlbumOwnerId == Model.UserId) // pokud jsem vlastník alba
+                                {
+                                    @if(Model.PicturePublic == true)
+                                    {
+                                        <form>
+                                            <button class="btn-gradient-1">Nastavit na soukromou</button>
+                                        </form>
+                                    }
+                                    else if (Model.PicturePublic == false)
+                                    {
+                                        <form>
+                                            <button class="btn-gradient-1">Nastavit na veřejnou</button>
+                                        </form>
+                                    }
+                                    <form>
+                                        <button class="btn-gradient-1">Smazat fotku</button>
+                                    </form>
+                                    <form>
+                                        <button class="btn-gradient-1">Smazat fotku z alba</button>
+                                    </form>
+                                    <a>Přidat fotku do alba</a>
 
+                                }
+                                // pokud jsem vlastník fotky, ale nejsem vlastník alba - Mohu ji smazat, přidat do alba
+                                else // pokud nejsem vlastník alba = fotka je veřejná - jiný člověk ji má v albu
+                                {
+                                    @if(Model.PicturePublic == true)
+                                    {
+                                        <form>
+                                            <button class="btn-gradient-1">Nastavit na soukromou</button>
+                                        </form>
+                                    }
+                                    else if (Model.PicturePublic == false)
+                                    {
+                                        <form>
+                                            <button class="btn-gradient-1">Nastavit na veřejnou</button>
+                                        </form>
+                                    }
+                                    <form>
+                                        <button class="btn-gradient-1">Smazat fotku</button>
+                                    </form>
+                                    <a>Přidat fotku do alba</a>
+
+                                }
+                            }
+                            else if (Model.PictureOwnerId != Model.UserId) // pokud nejsem vlastník fotky = fotka je veřejná
+                            {
+                                // musím ověřit zda li to je v tom albun
+
+                                //pokud nejsem vlastník fotky, ale vlastním album - Mohu si fotku vymazat z alba
+                                @if(Model.AlbumOwnerId == Model.UserId) // pokud jsem vlastník alba
+                                {
+                                    @if(Model.IsPictureInAlbum == true)
+                                    {
+                                    <form>
+                                        <button class="btn-gradient-1">Smazat fotku z alba</button>
+                                    </form>
+                                    }
+                                    <a>Přidat fotku do alba</a>
+
+                                }
+                                else
+                                {
+                                    <a>Přidat fotku do alba</a> 
+                                }
+
+                              }
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 }
+

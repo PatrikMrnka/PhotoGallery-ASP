@@ -4,33 +4,53 @@
     ViewData["Title"] = "Titulní strana";
 }
 
-<h1>Nejnovější veřejné obrázky</h1>
+<h1 class="title_newestP">Nejnovější veřejné obrázky</h1>
+<hr />
 
 @if (Model.PublicPicturesCount > 0) @*pokud jsou vytvořena veřejné fotky*@
 {
-    @foreach (var f in Model.Files.Where(a => a.IsPublic == true).Take(12).Reverse()) @*vypiš 12 fotek, které jsou veřejné*@
+    <div class="newest_photos">
+    @foreach (var f in Model.Files.Where(a => a.IsPublic == true).Take(12).Reverse())@*vypiš 12 fotek, které jsou veřejné*@
     {
-            <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
-@*            <a class="btn btn-sm btn-secondary" asp-page-handler="thumbnail" asp-route-filename="@f.Id">Thumbnail</a>*@
+        <a asp-page="./Picture" asp-route-pictureid="@f.Id">
+            <div class="photo_container_index">
+                <img src="@Url.Page("/Index","Thumbnail", new {filename=@f.Id})" >
+            </div>
+        </a>
     }
+    </div>
 }
 else
 {
-    <p>Nejsou tu žádné nejnovější obrázky.</p>
+    <p class="notfound">Nejsou tu žádné nejnovější obrázky.</p>
 }
 
-<h1>Veřejná alba</h1> @*Všechna veřejná alba*@
-
+<h1 class="title_newestP publicalbum">Veřejná alba</h1> @*Všechna veřejná alba*@
+<hr />
 @if (Model.PublicAlbumCount > 0) @*pokud jsou vytvořena veřejná alba*@
 {
+    <div class="public_albums">
     @foreach (var a in Model.AlbumPublic) @*vypiš veřejná alba*@
     {
-        <p><a asp-page="/Albums/Specific/Index" asp-route-id="@a.AlbumId" asp-route-name="@a.Name">@a.Name</a></p>
+        <div class="album_show">
+            <div class="album_image">
+                <a asp-page="./Albums/Specificc/Index" asp-route-albumid="@a.AlbumId">
+                    <div class="photo_container_index">
+                        <img src="~/images/albumpicture.jpg">
+                    </div>
+                </a>
+            </div>
+            <div class="album_name">
+                <a class="album_name_text" asp-page="./Albums/Specificc/Index" asp-route-albumid="@a.AlbumId">@a.Name</a>
+            </div>
+        </div>
+        //<p><a asp-page="/Albums/Specific/Index" asp-route-id="@a.AlbumId" asp-route-name="@a.Name">@a.Name</a></p>
     }
+    </div>
 }
 else
 {
-    <p>Nejsou tu žádné veřejná alba</p>
+    <p class="notfound">Nejsou tu žádné veřejná alba.</p>
 }
 
 @*            @foreach (var f in Model.Files)

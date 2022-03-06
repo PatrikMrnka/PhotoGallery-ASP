@@ -11,33 +11,33 @@
 }
 else if (Model.AlbumIdReceived != null)
 {
-    <h1>@Model.Album.Name</h1>
-    <p>Počet fotek: @Model.PicturesInAlbum</p>
-    <p><a asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a></p>
+    <h1 class="album_title">@Model.Album.Name</h1>
+    <p class="album_PictureCount">Počet fotek: @Model.PicturesInAlbum</p>
+    <div class="album_actionButtons">
+        <div class="picture_action_flex_container">
+            <a class="btn-gradient-1" asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a>
     @if (Model.AlbumIdDefault != Model.AlbumIdReceived)
     {
-        <p>
-            <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
-                <button>Smazat album</button>
-            </form>
-        </p>
+        <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
+            <button class="btn-gradient-1">Smazat album</button>
+        </form>
         @if (Model.IsAlbumPublic == true)
         {
-            <p>
                 <form asp-page-handler="MakeAlbumPrivate" asp-route-albumid="@Model.Album.AlbumId" method="post">
-                    <button>Nastavit jako soukromé</button>
+                    <button class="btn-gradient-1">Nastavit jako soukromé</button>
                 </form>
-            </p>
         }
         else if (Model.IsAlbumPublic == false)
         {
-            <p>
                 <form asp-page-handler="MakeAlbumPublic" asp-route-albumid="@Model.Album.AlbumId" method="post">
-                    <button>Nastavit jako veřejné</button>
+                    <button class="btn-gradient-1">Nastavit jako veřejné</button>
                 </form>
-            </p>
         }
     }
+        </div>
+    </div>
+    <hr class="line_between">
+
 
     @if (Model.PicturesInAlbum < 0)
     {
@@ -45,17 +45,26 @@ else if (Model.AlbumIdReceived != null)
     }
     else if (Model.PicturesInAlbum > 0)
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Obrázek</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var a in Model.PicturesAlbum)
+        <div class="newest_photos">
+            @foreach (var a in Model.PicturesAlbum)
+            {
+@*                <a asp-page="../../Picture" asp-route-pictureid="@a.PictureId" asp-route-albumid="@a.AlbumId">
+                    <div class="photo_container_index">
+                        <img src="@Url.Page("/Index","Thumbnail", new {filename=@a.Picture.Id})" >
+                    </div></a>*@
+                
+                <div class="photo_container_index">
+                    <a asp-page="../../Picture" asp-route-pictureid="@a.PictureId" asp-route-albumid="@a.AlbumId">
+                        <img src="@Url.Page("/Index","Thumbnail", new {filename=@a.Picture.Id})" >
+                    </a>
+                </div>
+            }
+
+        </div>
+@*                @foreach (var a in Model.PicturesAlbum)
                 {
                     <tr>
-                        <td><a asp-page="../../Picture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="Model.Album.AlbumId">@a.Picture.OriginalName</a></td>
+                        <td><a asp-page="../../Picture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.Album.AlbumId">@a.Picture.OriginalName</a></td>
                         <td><a asp-page="./Add" asp-route-pictureid="@a.Picture.Id">Přidat do alba</a></td>
 
                             @if (Model.AlbumIdReceived == Model.AlbumIdDefault)
@@ -81,9 +90,7 @@ else if (Model.AlbumIdReceived != null)
                                 </td>
                             }
                     </tr>
-                }
-            </tbody>
-        </table>
+                }*@
     }
 }
 

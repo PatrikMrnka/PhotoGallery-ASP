@@ -75,6 +75,14 @@ li.nav_right {
     font-size: 30px;
 }
 
+.title_newestP.publicalbum {
+    margin-top: 1em;
+}
+
+.notfound {
+    text-align: center;
+}
+
 .picture_name {
     margin-top: 2em;
     margin-bottom: 2em;
@@ -122,4 +130,101 @@ li.nav_right {
     padding: 10px;
     cursor: pointer;
     transition: color .2s;
+    text-decoration: none;
+    background-color: #f3f3f3;
 }
+
+.newest_photos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.photo_container_index img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    border-radius: 10px;
+}
+
+.photo_container_index {
+    width: 250px;
+    height: auto;
+    text-align: center;
+    display: flex;
+    align-self: center;
+}
+
+    .photo_container_index img:hover {
+        border: 2px black solid;
+    }
+
+.album_title {
+    margin-top: 1em;
+    margin-bottom: .5em;
+    text-align: center;
+}
+
+.album_PictureCount {
+    text-align: center;
+    margin-bottom: 1em
+}
+
+.album_actionButtons .picture_action_flex_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5em;
+}
+
+.line_between {
+    margin-bottom: 2em;
+    margin-top: 1.5em;
+}
+
+.public_albums {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.album_show {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.album_name_text {
+    text-decoration: none;
+    color: black;
+}
+
+.picture_flex {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.picture_action_buttons_flex {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.photo_self_container {
+    width: 900px;
+}
+
+    .photo_self_container img {
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+        border-radius: 10px;
+    }
