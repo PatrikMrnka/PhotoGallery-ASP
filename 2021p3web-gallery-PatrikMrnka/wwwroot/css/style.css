@@ -75,6 +75,22 @@ li.nav_right {
     font-size: 30px;
 }
 
+.picture_name {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.picture_flex_container {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    gap: 15%;
+}
+
 .title_newestP.publicalbum {
     margin-top: 1em;
 }

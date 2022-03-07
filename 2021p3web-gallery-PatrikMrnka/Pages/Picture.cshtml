@@ -112,7 +112,7 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
     }
     else if (Model.PictureOwnerId == Model.UserId || Model.PicturePublic == true) // pokud jsem buďto její vlastník nebo je veřejná
     {
-        <div class="picture_flex_container">
+@*        <div class="picture_flex_container">
             <div class="flex_item picture_container">
                 <div class="photo_container">
                     <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
@@ -128,7 +128,12 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                     </div>
                     <div class="picture_action">
                         <h2>Akce</h2>
-                        <div class="picture_action_flex_container">
+                        <div class="picture_action_flex_container">*@
+          <div class="picture_flex">
+              <div class="picture_info">
+                  <h1>@Model.PictureName</h1>
+                  <p>@Model.PictureDate</p>
+                  <div class="picture_action_buttons_flex">
                             @if(Model.PictureOwnerId == Model.UserId) // pokud jsem vlastník fotky - je jedno jestli je veřejná nebo ne (jsem BOSS fotky, mohu si dělat co chci)
                             {
                                 //pokud jsem vlastník fotky i alba - mohu si dělat cokoliv 
@@ -136,44 +141,43 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                                 {
                                     @if(Model.PicturePublic == true)
                                     {
-                                        <form>
+                                        <form asp-page-handler="MakePicturePrivate" asp-route-pictureid="@Model.Picture.Id" method="post" >
                                             <button class="btn-gradient-1">Nastavit na soukromou</button>
                                         </form>
                                     }
                                     else if (Model.PicturePublic == false)
                                     {
-                                        <form>
+                                        <form asp-page-handler="MakePicturePublic" asp-route-pictureid="@Model.Picture.Id" method="post">
                                             <button class="btn-gradient-1">Nastavit na veřejnou</button>
                                         </form>
                                     }
-                                    <form>
+                                    <form asp-page-handler="DeletePicture" asp-route-pictureid="@Model.Picture.Id" method="post">
                                         <button class="btn-gradient-1">Smazat fotku</button>
                                     </form>
-                                    <form>
+                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" method="post">
                                         <button class="btn-gradient-1">Smazat fotku z alba</button>
                                     </form>
-                                    <a>Přidat fotku do alba</a>
-
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a>
                                 }
                                 // pokud jsem vlastník fotky, ale nejsem vlastník alba - Mohu ji smazat, přidat do alba
                                 else // pokud nejsem vlastník alba = fotka je veřejná - jiný člověk ji má v albu
                                 {
                                     @if(Model.PicturePublic == true)
                                     {
-                                        <form>
+                                        <form asp-page-handler="MakePicturePrivate" asp-route-pictureid="@Model.Picture.Id" method="post">
                                             <button class="btn-gradient-1">Nastavit na soukromou</button>
                                         </form>
                                     }
                                     else if (Model.PicturePublic == false)
                                     {
-                                        <form>
+                                        <form asp-page-handler="MakePicturePublic" asp-route-pictureid="@Model.Picture.Id" method="post">
                                             <button class="btn-gradient-1">Nastavit na veřejnou</button>
                                         </form>
                                     }
-                                    <form>
+                                    <form asp-page-handler="DeletePicture" asp-route-pictureid="@Model.Picture.Id" method="post">
                                         <button class="btn-gradient-1">Smazat fotku</button>
                                     </form>
-                                    <a>Přidat fotku do alba</a>
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a>
 
                                 }
                             }
@@ -186,25 +190,29 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                                 {
                                     @if(Model.IsPictureInAlbum == true)
                                     {
-                                    <form>
+                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" method="post">
                                         <button class="btn-gradient-1">Smazat fotku z alba</button>
                                     </form>
                                     }
-                                    <a>Přidat fotku do alba</a>
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a>
 
                                 }
                                 else
                                 {
-                                    <a>Přidat fotku do alba</a> 
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a> 
                                 }
-
-                              }
                             }
                         </div>
                     </div>
+                    <hr>
+                    <div class="picture_self">
+                        <a>
+                            <div class="photo_self_container">
+                                <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
+                            </div>
+                        </a>
                 </div>
             </div>
-        </div>
     }
 }
 
