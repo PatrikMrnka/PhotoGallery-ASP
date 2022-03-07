@@ -21,6 +21,7 @@ else if (Model.AlbumIdReceived != null)
         <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
             <button class="btn-gradient-1">Smazat album</button>
         </form>
+        <a class="btn-gradient-1" onclick="showChangeNameDiv()">Změnit název</a>
         @if (Model.IsAlbumPublic == true)
         {
                 <form asp-page-handler="MakeAlbumPrivate" asp-route-albumid="@Model.Album.AlbumId" method="post">

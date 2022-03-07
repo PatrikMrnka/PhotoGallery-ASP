@@ -15,11 +15,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
     public class PictureModel : PageModel
     {
         private readonly _2021p3web_gallery_PatrikMrnka.Data.ApplicationDbContext _context;
+        private IWebHostEnvironment _environment;
 
 
-        public PictureModel(_2021p3web_gallery_PatrikMrnka.Data.ApplicationDbContext context)
+        public PictureModel(_2021p3web_gallery_PatrikMrnka.Data.ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         public string PictureName { get; set; }
@@ -115,6 +117,29 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                 return File(thumbnail.Blob, file.ContentType);
             }
             return NotFound("no thumbnail for this file");
+        }
+
+        public IActionResult OnGetFullSize(string filename)
+        {
+            var fullName = Path.Combine(_environment.ContentRootPath, "Uploads", filename);
+
+            if (System.IO.File.Exists(fullName))
+            {
+                var fileRecord = _context.Files.Find(Guid.Parse(filename));
+
+                if (fileRecord != null)
+                {
+                    return File(System.IO.File.OpenRead(fullName), fileRecord.ContentType);
+                }
+                else
+                {
+                    return RedirectToPage();
+                }
+            }
+            else
+            {
+                return RedirectToPage();
+            }
         }
 
     }

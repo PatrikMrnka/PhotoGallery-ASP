@@ -7,26 +7,34 @@
 
 @if (Model.PictureIdReceived == null)
 {
-    <p>@Model.NotFoundPicture</p>
+    <h1>Přidat fotku do alba</h1>
+    <p>@Model.ErrorMessage</p>
 }
-else if (Model.PictureIdReceived != null)
+else
 {
     <h1>Přidat @Model.PictureName do alba</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Album</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @foreach (var item in Model.PicturesAlbum)
-                {
-                    <td>@item.Album.</td>
-                }
-            </tr>
-        </tbody>
-    </table>
+    <p>@Model.ErrorMessage</p>
+    <hr />
+    
+    <div class="public_albums">
+        @foreach (var item in Model.Albums) 
+        {
+            <div class="album_show">
+                <div class="album_image">
+                        <a asp-page="./Specificc/Index" asp-route-albumid="@item.AlbumId">
+                            <div class="photo_container_index">
+                                <img src="~/images/albumpicture.jpg">
+                            </div>
+                        </a>
+                </div>
+                <div class="album_name">
+                    <a class="album_name_text">@item.Name</a>
+                    <form  asp-page-handler="Add" asp-route-pictureid="@Model.PictureIdReceived" asp-route-albumid="@item.AlbumId" method="post"> 
+                        <button class="btn-gradient-1">Nahrát</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
 }
 

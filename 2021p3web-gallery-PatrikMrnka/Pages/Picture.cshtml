@@ -16,7 +16,7 @@
             {
                 <a asp-page="./Picture" asp-route-pictureid="@f.Id">
                     <div class="photo_container_index">
-                        <img src="@Url.Page("/Index","Thumbnail", new {filename=f.Id })" />
+                        <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
                     </div>
                 </a>
             }
@@ -91,14 +91,13 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived == null) // po
             <p>@Model.Picture.UploadedAt</p>
             <p>@Model.Picture.UploaderId</p>
             <div class="picture_action_buttons_flex">
-                <button class="btn-gradient-1">Smazat obrázek</button>
-                // ....
+                <a class="btn-gradient-1" asp-page="./Albums/Specificc/Add" asp-route-pictureid="@Model.Picture.Id">Přidat obrázek do alba</a>
             </div>
         </div>
         <hr>
         <div class="picture_self">
             <div class="photo_self_container">
-                <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
+                <img src="@Url.Page("/Picture","FullSize", new {filename=Model.PictureIdReceived})" />
             </div>
         </div>
     </div>
@@ -154,10 +153,10 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                                     <form asp-page-handler="DeletePicture" asp-route-pictureid="@Model.Picture.Id" method="post">
                                         <button class="btn-gradient-1">Smazat fotku</button>
                                     </form>
-                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.AlbumIdReceived" method="post">
                                         <button class="btn-gradient-1">Smazat fotku z alba</button>
                                     </form>
-                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a>
+                                    <a asp-page="./Albums/Specificc/Add" asp-route-pictureid="@Model.Picture.Id" class="btn-gradient-1">Přidat fotku do alba</a>
                                 }
                                 // pokud jsem vlastník fotky, ale nejsem vlastník alba - Mohu ji smazat, přidat do alba
                                 else // pokud nejsem vlastník alba = fotka je veřejná - jiný člověk ji má v albu
@@ -177,7 +176,7 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                                     <form asp-page-handler="DeletePicture" asp-route-pictureid="@Model.Picture.Id" method="post">
                                         <button class="btn-gradient-1">Smazat fotku</button>
                                     </form>
-                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a>
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" class="btn-gradient-1">Přidat fotku do alba</a>
 
                                 }
                             }
@@ -199,7 +198,7 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                                 }
                                 else
                                 {
-                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" asp-route-albumid="@Model.Album.AlbumId" class="btn-gradient-1">Přidat fotku do alba</a> 
+                                    <a asp-page="./Albums./Specificc/Add" asp-route-pictureid="@Model.Picture.Id" class="btn-gradient-1">Přidat fotku do alba</a> 
                                 }
                             }
                         </div>
