@@ -142,5 +142,87 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             }
         }
 
+        public async Task<IActionResult> OnPostDeletePhoto(Guid? albumid, Guid? pictureid) // odstranit fotku kompletně
+        {
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+            IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
+
+            if (pictureid == null && albumid == null)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid != null && albumid == null)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid == null && albumid != null)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid != null && albumid != null)
+            {
+                var pictures = _context.StoredFileAlbums.Include(a => a.Picture).Where(a => a.PictureId == pictureid);
+                foreach (var item in await pictures.ToListAsync()) // vymazat fotku ze všech alb
+                {
+                    _context.StoredFileAlbums.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+
+                Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.Id == pictureid).FirstOrDefaultAsync(); // vymazat fotku z Files
+                _context.Files.Remove(Picture);
+                await _context.SaveChangesAsync();
+
+                var thumbnails = _context.Thumbnails.Include(a => a.File).Where(a => a.FileId == pictureid);
+                foreach (var item in await thumbnails.ToListAsync()) // vymazat náhledy fotky
+                {
+                    _context.Thumbnails.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+
+                //vymazat fotku na disku
+                var pictureIdString = Path.Combine(_environment.ContentRootPath, "Uploads", pictureid.ToString()); // cesta k fotce na disku
+                if (System.IO.File.Exists(pictureIdString)) // pokud záznam o fotce na disku existuje
+                {
+                    System.IO.File.Delete(pictureIdString);
+                }
+
+                return RedirectToPage(new { albumid = albumid });
+            }
+            return RedirectToPage(new { albumid = albumid });
+        }
+
+        public async Task<IActionResult> OnPostDeletePhotoAlbum(Guid? albumid, Guid? pictureid) // odstranit fotku z konkrétního alba
+        {
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+            IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
+
+            if (pictureid == null && albumid == null && albumid != AlbumIdDefault)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid != null && albumid == null && albumid != AlbumIdDefault)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid == null && albumid != null && albumid != AlbumIdDefault)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid != null && albumid == AlbumIdDefault)
+            {
+                return RedirectToPage(new { albumid = albumid });
+            }
+            else if (pictureid != null && albumid != null && albumid != AlbumIdDefault)
+            {
+                PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                _context.StoredFileAlbums.Remove(PictureAlbum);
+                await _context.SaveChangesAsync();
+                return RedirectToPage(new { albumid = albumid });
+            }
+            return RedirectToPage(new { albumid = albumid });
+        }
+
     }
 }

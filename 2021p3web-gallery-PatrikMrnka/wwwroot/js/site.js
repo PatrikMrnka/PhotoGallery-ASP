@@ -7,3 +7,14 @@
 //    let form = document.getElementById("form_submit");
 //    form.submit();
 //}
+
+function showChangeNameDiv() {
+    var x = document.getElementById("changeNameDiv");
+
+    if (x.style.display === "block") {
+        x.style.display = "none";
+    }
+    else {
+        x.style.display = "block";
+    }
+}

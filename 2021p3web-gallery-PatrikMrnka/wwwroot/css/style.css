@@ -244,3 +244,25 @@ li.nav_right {
         margin: auto;
         border-radius: 10px;
     }
+
+#changeNameDiv {
+    text-align: center;
+    display: none;
+}
+
+.changeNameInput {
+    width: 20%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: .3s;
+    margin-right: 1em;
+}
+
+    .changeNameInput:focus {
+        border-color: dodgerBlue;
+        box-shadow: 0 0 8px 0 dodgerBlue;
+    }

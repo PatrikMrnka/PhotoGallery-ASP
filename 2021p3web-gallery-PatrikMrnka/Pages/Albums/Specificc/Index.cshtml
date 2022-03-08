@@ -11,33 +11,58 @@
 }
 else if (Model.AlbumIdReceived != null)
 {
-    <h1 class="album_title">@Model.Album.Name</h1>
-    <p class="album_PictureCount">Počet fotek: @Model.PicturesInAlbum</p>
-    <div class="album_actionButtons">
-        <div class="picture_action_flex_container">
-            <a class="btn-gradient-1" asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a>
-    @if (Model.AlbumIdDefault != Model.AlbumIdReceived)
+    @if (Model.Album.UploaderId == Model.UserId || Model.Album.IsPublic == true) // pokud jsem vlastníkem či je veřejné
     {
-        <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
-            <button class="btn-gradient-1">Smazat album</button>
-        </form>
-        <a class="btn-gradient-1" onclick="showChangeNameDiv()">Změnit název</a>
-        @if (Model.IsAlbumPublic == true)
+        <h1 class="album_title">@Model.Album.Name</h1>
+        <p class="album_PictureCount">Počet fotek: @Model.PicturesInAlbum</p>
+        <div class="album_actionButtons">
+            <div class="picture_action_flex_container">
+        @if (Model.AlbumIdDefault != Model.AlbumIdReceived) // pokud album není default
         {
-                <form asp-page-handler="MakeAlbumPrivate" asp-route-albumid="@Model.Album.AlbumId" method="post">
-                    <button class="btn-gradient-1">Nastavit jako soukromé</button>
+            @if (Model.Album.UploaderId == Model.UserId) // jsem jeho vlastník - jedno jestli je veřejné
+            {
+                <form asp-page-handler="DeleteAlbum" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                    <button class="btn-gradient-1">Smazat album</button>
                 </form>
-        }
-        else if (Model.IsAlbumPublic == false)
-        {
-                <form asp-page-handler="MakeAlbumPublic" asp-route-albumid="@Model.Album.AlbumId" method="post">
-                    <button class="btn-gradient-1">Nastavit jako veřejné</button>
-                </form>
-        }
-    }
+                <a class="btn-gradient-1" asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a>
+                <a onclick="showChangeNameDiv()" class="btn-gradient-1">Změnit název</a>
+                @if (Model.IsAlbumPublic == true) // pokud je album veřejné a jsem vlastník - mohu měnit veřejnost
+                {
+                        <form asp-page-handler="MakeAlbumPrivate" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                            <button class="btn-gradient-1">Nastavit jako soukromé</button>
+                        </form>
+                }
+                else if (Model.IsAlbumPublic == false)
+                {
+                        <form asp-page-handler="MakeAlbumPublic" asp-route-albumid="@Model.Album.AlbumId" method="post">
+                            <button class="btn-gradient-1">Nastavit jako veřejné</button>
+                        </form>
+                }
+            }
+            else if (Model.Album.UploaderId != Model.UserId && Model.Album.IsPublic == true)
+            {
+                        // nemohu s albem dělat nic
+                    }
+                }
+                else if (Model.AlbumIdDefault == Model.AlbumIdReceived) // pokud je album Výchozí
+                {
+                    // nemohu s albem dělat nic
+                    <a class="btn-gradient-1" asp-page="../../Upload" asp-route-albumid="@Model.Album.AlbumId">Nahrát obrázky do alba</a>
+                }
+            </div>
         </div>
-    </div>
-    <hr class="line_between">
+        @if (Model.Album.UploaderId == Model.UserId)
+        {
+            <div id="changeNameDiv">
+                <form asp-route-albumid="@Model.Album.AlbumId" asp-page-handler="ChangeName" method="post">
+                    <input asp-for="@Model.ChangeName" class="changeNameInput" placeholder="Název">
+                    <button class="btn-gradient-1">Změnit</button>
+                </form>
+            </div>
+        }
+        <hr class="line_between">
+    }
+
 
 
     @if (Model.PicturesInAlbum < 0)
@@ -60,38 +85,7 @@ else if (Model.AlbumIdReceived != null)
                     </a>
                 </div>
             }
-
         </div>
-@*                @foreach (var a in Model.PicturesAlbum)
-                {
-                    <tr>
-                        <td><a asp-page="../../Picture" asp-route-pictureid="@a.Picture.Id" asp-route-albumid="@Model.Album.AlbumId">@a.Picture.OriginalName</a></td>
-                        <td><a asp-page="./Add" asp-route-pictureid="@a.Picture.Id">Přidat do alba</a></td>
-
-                            @if (Model.AlbumIdReceived == Model.AlbumIdDefault)
-                            {
-                                <td>
-                                    <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
-                                        <button>Vymazat fotku</button>
-                                    </form>
-                                </td>
-                            }
-
-                            else if (Model.AlbumIdReceived != Model.AlbumIdDefault)
-                            {
-                                <td>
-                                    <form asp-page-handler="DeletePhoto" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
-                                        <button>Vymazat fotku</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form asp-page-handler="DeletePhotoAlbum" asp-route-albumid="@Model.Album.AlbumId" asp-route-pictureid="@a.Picture.Id" method="post">
-                                        <button>Vymazat fotku z alba</button>
-                                    </form>
-                                </td>
-                            }
-                    </tr>
-                }*@
     }
 }
 
