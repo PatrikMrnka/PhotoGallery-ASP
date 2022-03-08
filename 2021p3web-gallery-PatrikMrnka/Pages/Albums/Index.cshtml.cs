@@ -27,6 +27,8 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
         public Album Album { get; set; }
         public Guid AlbumDefaultId { get; set; }
         public string ErrorMessage { get; set; }
+        [BindProperty]
+        public string NewAlbumName { get; set; }
         public IList<Album> Albums { get; set; }
         public IList<Album> AlbumPublic { get; set; }
         public IList<StoredFileAlbum> StoredFileAlbum { get; set; }
@@ -64,6 +66,23 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
                 await _context.SaveChangesAsync();
                 return Page();
             }
+        }
+
+        public async Task<IActionResult> OnPostCreateNewAlbum()
+        {
+            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+
+            var newAlbum = new Album
+            {
+                Name = NewAlbumName,
+                CreationDate = DateTime.Now,
+                IsPublic = false,
+                UploaderId = userId
+            };
+
+            _context.Albums.Add(newAlbum);
+            await _context.SaveChangesAsync();
+            return RedirectToPage();
         }
     }
 }

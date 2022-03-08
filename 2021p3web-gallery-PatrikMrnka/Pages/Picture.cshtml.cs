@@ -50,6 +50,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
 
         public async Task OnGetAsync(Guid? pictureid, Guid? albumid)
         {
+            if (pictureid == null && albumid == null)
+            {
+
+            }
             PictureIdReceived = pictureid;
             PublicPicturesCount = _context.Files.Where(a => a.IsPublic == true).Count();
             if (pictureid == null && albumid == null)

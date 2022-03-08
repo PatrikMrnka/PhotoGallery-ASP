@@ -8,8 +8,14 @@
     <p class="album_PictureCount">Počet alb: @Model.AlbumCount</p>
     <div class="album_actionButtons">
         <div class="picture_action_flex_container">
-            <a class="btn-gradient-1" asp-page="Create">Vytvořit nové album</a>
+            <a class="btn-gradient-1" onclick="createNewAlbum()">Vytvořit nové album</a>
         </div>
+    </div>
+    <div id="createNewAlbum">
+        <form asp-page-handler="CreateNewAlbum" method="post">
+            <input asp-for="@Model.NewAlbumName" class="createNewAlbumInput" placeholder="Název">
+            <button class="btn-gradient-1">Vytvořit</button>
+        </form>
     </div>
     <hr />
 @if (Model.AlbumCount > 0)

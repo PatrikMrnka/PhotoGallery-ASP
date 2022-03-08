@@ -18,3 +18,14 @@ function showChangeNameDiv() {
         x.style.display = "block";
     }
 }
+
+function createNewAlbum() {
+    var album = document.getElementById("createNewAlbum");
+
+    if (album.style.display === "block") {
+        album.style.display = "none";
+    }
+    else {
+        album.style.display = "block";
+    }
+}
