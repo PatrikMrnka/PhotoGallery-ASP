@@ -34,9 +34,9 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived == null) // po
     {
         <p>Nelze fotku zobrazit, není veřejná, nebo nejste vlastník</p>
     }
-    else // pokud je buďto veřejná nebo jsem její vlastník
+    else if (Model.PicturePublic == true || Model.PictureOwnerId == Model.UserId) // pokud je buďto veřejná nebo jsem její vlastník
     {
-@*     <div class="picture_flex_container">
+     <div class="picture_flex_container">
         <div class="flex_item picture_container">
             <div class="photo_container">
                 <img src="@Url.Page("/Index","Thumbnail", new {filename=@Model.PictureIdReceived})" >
@@ -84,7 +84,7 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived == null) // po
                 </div>
             </div>
         </div>
-    </div>   *@
+    </div>
     <div class="picture_flex">
         <div class="picture_info">
             <h1>@Model.Picture.OriginalName</h1>
@@ -127,7 +127,7 @@ else if (Model.PictureIdReceived != null && Model.AlbumIdReceived != null) // po
                     </div>
                     <div class="picture_action">
                         <h2>Akce</h2>
-                        <div class="picture_action_flex_container">*@
+                        <div class="picture_action_flex_container">
           <div class="picture_flex">
               <div class="picture_info">
                   <h1>@Model.PictureName</h1>
