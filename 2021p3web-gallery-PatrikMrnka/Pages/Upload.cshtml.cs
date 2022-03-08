@@ -2,10 +2,8 @@ using _2021p3web_gallery_PatrikMrnka.Data;
 using _2021p3web_gallery_PatrikMrnka.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Processing;
 using System.Security.Claims;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages
@@ -136,25 +134,40 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
                                 }
                                 else if (albumid != null && albumid != AlbumIdDefault) // uložení fotky do konkrétního alba - uloží se i do výchozího
                                 {
-                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
-                                    var albumPictureRecordDefault = new StoredFileAlbum // uložení do výchozího alba
+                                    if (fileRecord.UploaderId == userId) // pokud je fotka uživatele - nahraje se i do výchozího alba
                                     {
-                                        AlbumId = AlbumIdDefault,
-                                        PictureId = fileRecord.Id
-                                    };
+                                        AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
+                                        var albumPictureRecordDefault = new StoredFileAlbum // uložení do výchozího alba
+                                        {
+                                            AlbumId = AlbumIdDefault,
+                                            PictureId = fileRecord.Id
+                                        };
 
-                                    _context.StoredFileAlbums.Add(albumPictureRecordDefault);
-                                    await _context.SaveChangesAsync();
+                                        _context.StoredFileAlbums.Add(albumPictureRecordDefault);
+                                        await _context.SaveChangesAsync();
 
-                                    var albumPictureRecord = new StoredFileAlbum // uložení do konkrétního alba
+
+                                        var albumPictureRecord = new StoredFileAlbum // uložení do konkrétního alba
+                                        {
+                                            AlbumId = AlbumIdReceived,
+                                            PictureId = fileRecord.Id
+                                        };
+
+                                        _context.StoredFileAlbums.Add(albumPictureRecord);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    else if (fileRecord.UploaderId != userId)
                                     {
-                                        AlbumId = AlbumIdReceived,
-                                        PictureId = fileRecord.Id
-                                    };
+                                        var albumPictureRecord = new StoredFileAlbum // uložení do konkrétního alba
+                                        {
+                                            AlbumId = AlbumIdReceived,
+                                            PictureId = fileRecord.Id
+                                        };
 
-                                    _context.StoredFileAlbums.Add(albumPictureRecord);
-                                    await _context.SaveChangesAsync();
-
+                                        _context.StoredFileAlbums.Add(albumPictureRecord);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    
                                     return RedirectToPage("./Albums/Specificc/Index", new {albumid = albumid}); // vrátí se zpátky na album - passing parameter
                                 }
                                 else if (albumid != null && albumid == AlbumIdDefault) // uložení do výchozího alba

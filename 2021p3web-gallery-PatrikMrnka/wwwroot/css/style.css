@@ -232,6 +232,7 @@ li.nav_right {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    justify-content: center;
 }
 
 .photo_self_container {

@@ -101,9 +101,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
             UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
 
-            if (Album.UploaderId == UserId)
+            if (Album.UploaderId == UserId) // pokud vlastním album
             {
-                if (albumid == null && albumid != AlbumIdDefault)
+                if (albumid == null && albumid != AlbumIdDefault) 
                 {
                     return RedirectToPage(new { albumid = albumid });
                 }
@@ -113,17 +113,35 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                 }
                 else if (albumid != null && albumid != AlbumIdDefault && IsAlbumPublic == true)
                 {
-                    Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                    Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync(); // album se nastaví na soukromé
                     Album.IsPublic = false;
                     await _context.SaveChangesAsync();
 
-                    PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).ToListAsync(); // list všech záznamů obrázku z určitého alba
-                    foreach (var item in PicturesAlbum)
+                    //Pictures = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+                    PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(b => b.AlbumId == albumid).ToListAsync(); // všechny záznamy fotek v konkrétním albu
+                    foreach (var item in PicturesAlbum) // nastavit pouze fotky, které vlastním
                     {
-                        Picture = await _context.Files.Include(a => a.Uploader).Include(b => b.StoredFileAlbums).Where(a => a.UploaderId == userId).Where(b => b.Id == item.PictureId).FirstOrDefaultAsync();
-                        Picture.IsPublic = false;
-                        await _context.SaveChangesAsync();
+                        if (item.Picture.UploaderId == userId)
+                        {
+                            //PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == item.Id).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync(); // všechny záznamy uživatelových obrázků v konkrétním albu
+                            Picture = await _context.Files.Include(a => a.Uploader).Include(b => b.StoredFileAlbums).Where(b => b.Id == item.PictureId).FirstOrDefaultAsync();
+                            Picture.IsPublic = false;
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+
+                        }
+
                     }
+
+                    //PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).ToListAsync(); // list všech záznamů obrázku z určitého alba
+                    //foreach (var item in PicturesAlbum)
+                    //{
+                    //    Picture = await _context.Files.Include(a => a.Uploader).Include(b => b.StoredFileAlbums).Where(a => a.UploaderId == userId).Where(b => b.Id == item.PictureId).FirstOrDefaultAsync();
+                    //    Picture.IsPublic = false;
+                    //    await _context.SaveChangesAsync();
+                    //}
                     return RedirectToPage(new { albumid = albumid });
                 }
                 return RedirectToPage(new { albumid = albumid });
@@ -159,16 +177,24 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                     Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
                     Album.IsPublic = true;
                     await _context.SaveChangesAsync();
+                    UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
 
-                    PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).ToListAsync(); // list všech záznamů obrázku z určitého alba
-                    foreach (var item in PicturesAlbum) // pro každý záznam 
+                    PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(b => b.AlbumId == albumid).ToListAsync(); // všechny záznamy fotek v konkrétním albu
+                    foreach (var item in PicturesAlbum) // nastavit pouze fotky, které vlastním
                     {
-                        Picture = await _context.Files.Include(a => a.Uploader).Include(b => b.StoredFileAlbums).Where(a => a.UploaderId == userId).Where(b => b.Id == item.PictureId).FirstOrDefaultAsync();
-                        Picture.IsPublic = true;
-                        await _context.SaveChangesAsync();
+                        if (item.Picture.UploaderId == userId)
+                        {
+                            //PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == item.Id).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync(); // všechny záznamy uživatelových obrázků v konkrétním albu
+                            Picture = await _context.Files.Include(a => a.Uploader).Include(b => b.StoredFileAlbums).Where(b => b.Id == item.PictureId).FirstOrDefaultAsync();
+                            Picture.IsPublic = true;
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+
+                        }
                     }
                     return RedirectToPage(new { albumid = albumid });
-
                 }
                 return RedirectToPage(new { albumid = albumid });
             }
