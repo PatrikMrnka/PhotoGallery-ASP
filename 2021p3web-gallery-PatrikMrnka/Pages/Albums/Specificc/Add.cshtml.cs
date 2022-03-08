@@ -100,26 +100,41 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                         {
                             if (PictureAlbumRecordDefault != true) // pokud ještě není záznam v tabulce Výchozí
                             {
-                                // přidat nový záznam do PictureAlbum (výchozí + album)
-                                AlbumDefault = await _context.Albums.Include(b => b.Uploader).Where(b => b.UploaderId == UserId).Where(a => a.IsDefault == true).FirstOrDefaultAsync(); // výchozí album
-                                var albumPictureRecordDefault = new StoredFileAlbum // výchozí
+                                if (Picture.UploaderId == UserId) // pokud je fotka uživatelova - nahraje se i do Výchozí
                                 {
-                                    AlbumId = AlbumDefault.AlbumId,
-                                    PictureId = pictureid
-                                };
+                                    // přidat nový záznam do PictureAlbum (výchozí + album)
+                                    AlbumDefault = await _context.Albums.Include(b => b.Uploader).Where(b => b.UploaderId == UserId).Where(a => a.IsDefault == true).FirstOrDefaultAsync(); // výchozí album
+                                    var albumPictureRecordDefault = new StoredFileAlbum // výchozí
+                                    {
+                                        AlbumId = AlbumDefault.AlbumId,
+                                        PictureId = pictureid
+                                    };
 
-                                _context.StoredFileAlbums.Add(albumPictureRecordDefault);
-                                await _context.SaveChangesAsync();
+                                    _context.StoredFileAlbums.Add(albumPictureRecordDefault);
+                                    await _context.SaveChangesAsync();
 
-                                var albumPictureRecord = new StoredFileAlbum
+                                    var albumPictureRecord = new StoredFileAlbum
+                                    {
+                                        AlbumId = albumid,
+                                        PictureId = pictureid
+                                    };
+
+                                    _context.StoredFileAlbums.Add(albumPictureRecord);
+                                    await _context.SaveChangesAsync();
+                                }
+                                else
                                 {
-                                    AlbumId = albumid,
-                                    PictureId = pictureid
-                                };
+                                    var albumPictureRecord = new StoredFileAlbum
+                                    {
+                                        AlbumId = albumid,
+                                        PictureId = pictureid
+                                    };
 
-                                _context.StoredFileAlbums.Add(albumPictureRecord);
-                                await _context.SaveChangesAsync();
+                                    _context.StoredFileAlbums.Add(albumPictureRecord);
+                                    await _context.SaveChangesAsync();
+                                }
                                 return RedirectToPage("./Index", new { albumid = albumid });
+
                             }
                             else if (PictureAlbumRecordDefault == true) // pouze do zvoleného alba
                             {

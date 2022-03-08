@@ -121,16 +121,17 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
 
                                 if (albumid == null && albumid != AlbumIdDefault) // uložení fotky do výchozího alba
                                 {
-                                    AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
+                                        AlbumIdDefault = _context.Albums.Where(a => a.UploaderId == userId).Where(a => a.IsDefault == true).Select(a => a.AlbumId).FirstOrDefault(); // ID výchozího alba
 
-                                    var albumPictureRecord = new StoredFileAlbum
-                                    {
-                                        AlbumId = AlbumIdDefault,
-                                        PictureId = fileRecord.Id
-                                    };
+                                        var albumPictureRecord = new StoredFileAlbum
+                                        {
+                                            AlbumId = AlbumIdDefault,
+                                            PictureId = fileRecord.Id
+                                        };
 
-                                    _context.StoredFileAlbums.Add(albumPictureRecord); 
-                                    await _context.SaveChangesAsync();
+                                        _context.StoredFileAlbums.Add(albumPictureRecord);
+                                        await _context.SaveChangesAsync();
+
                                 }
                                 else if (albumid != null && albumid != AlbumIdDefault) // uložení fotky do konkrétního alba - uloží se i do výchozího
                                 {
