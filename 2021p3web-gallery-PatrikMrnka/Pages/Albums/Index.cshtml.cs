@@ -35,12 +35,30 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums
         public int PicturesInAlbum { get; set; }
         public int AlbumCount { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? filterid)
         {
-            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-            AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Count(); // Počet soukromých alb
-            Albums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
-            AlbumDefaultId = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefaultAsync();
+            if (filterid == null)
+            {
+                var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Count(); // Počet soukromých alb
+                Albums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+                AlbumDefaultId = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefaultAsync();
+            }
+            else if (filterid == 1)
+            {
+                var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Count(); // Počet soukromých alb
+                Albums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).OrderBy(a => a.Name).ToListAsync();
+                AlbumDefaultId = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefaultAsync();
+            }
+            else if (filterid == 2)
+            {
+                var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                AlbumCount = _context.Albums.Where(a => a.UploaderId == userId).Count(); // Počet soukromých alb
+                Albums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).OrderBy(a => a.CreationDate).ToListAsync();
+                AlbumDefaultId = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefaultAsync();
+            }
+            
 
             //Album = await _context.Albums
             //    .Include(a => a.Uploader).ToListAsync();

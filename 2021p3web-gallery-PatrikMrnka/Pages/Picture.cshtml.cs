@@ -102,59 +102,79 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             }
             else if (pictureid != null && albumid != null)
             {
-                var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-                Picture = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
-                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
                 AlbumIdReceived = albumid;
                 PictureIdReceived = pictureid;
-                if (Picture.UploaderId == userId || Picture.IsPublic == true) // pokud jsem vlastník fotky či je veřejná
+                UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                Picture = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                Album = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                if (Album.UploaderId == UserId) // pokud jsem vlastník alba
                 {
-                    if (Album.UploaderId == userId || Album.IsPublic == true) // pokud jsem vlastník alba či je veřejné
+                    if (Album.IsPublic == true)
                     {
-                        Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
-                        Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
-                        AlbumIdReceived = albumid;
-                        PictureIdReceived = pictureid;
+                        if (Picture.UploaderId == UserId) // pokud jsem vlastník fotky
+                        {
+                            Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
+                        else if (Picture.IsPublic == true && Picture.UploaderId != UserId) // pokud je fotka veřejná, ale nevlastním ji
+                        {
+                            Picture = await _context.Files.Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
                     }
-                    else // pokud nejsem vlastník alba ani není veřejné
+                    else if (Album.IsPublic != true)
                     {
-                        ErrorMessage = "Nejsi vlastník alba nebo není veřejné.";
+                        if (Picture.UploaderId == UserId) // pokud jsem vlastník fotky
+                        {
+                            Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
+                        else if (Picture.IsPublic == true && Picture.UploaderId != UserId) // pokud je fotka veřejná, ale nevlastním ji
+                        {
+                            Picture = await _context.Files.Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
                     }
                 }
-                else // pokud nejsem vlastník fotky ani není veřejná
+                else if (Album.UploaderId != UserId) // Pokud nejsem vlastník alba
                 {
-                    ErrorMessage = "Nejsi vlastník fotky nebo není veřejná.";
+                    if (Album.IsPublic == true)
+                    {
+                        if (Picture.UploaderId == UserId) // Pokud jsem vlastník fotky
+                        {
+                            Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == UserId).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Where(a => a.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
+                        else if (Picture.IsPublic == true && Picture.UploaderId != UserId) // pokud je fotka veřejná, ale nevlastním ji
+                        {
+                            Picture = await _context.Files.Where(b => b.Id == pictureid).FirstOrDefaultAsync();
+                            Album = await _context.Albums.Where(a => a.AlbumId == albumid).FirstOrDefaultAsync();
+                            AlbumIdReceived = albumid;
+                            PictureIdReceived = pictureid;
+                        }
+                    }
+                    else if (Album.IsPublic == false)
+                    {
+                        ErrorMessage = "Nelze Zobrazit.";
+                    }
                 }
+                
             }
-            //PictureIdReceived = pictureid;
-            //PublicPicturesCount = _context.Files.Where(a => a.IsPublic == true).Count();
-            //if (pictureid == null && albumid == null)
-            //{
-
-            //}
-            //else if (pictureid != null && albumid == null)
-            //{
-            //    //var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-            //    Picture = await _context.Files.Where(a => a.Id == pictureid).FirstOrDefaultAsync();
-            //    PictureName = await _context.Files.Where(a => a.Id == pictureid).Select(a => a.OriginalName).FirstOrDefaultAsync();
-            //    PictureDate = await _context.Files.Where(a => a.Id == pictureid).Select(a => a.UploadedAt).FirstOrDefaultAsync();
-            //    PicturePublic = await _context.Files.Where(b => b.Id == pictureid).Select(a => a.IsPublic).FirstOrDefaultAsync();
-            //    PictureOwnerId = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).Select(a => a.UploaderId).FirstOrDefaultAsync();
-
-            //}
-            //else if (pictureid != null && albumid != null)
-            //{
-            //    UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-            //    Picture = await _context.Files.Where(a => a.Id == pictureid).FirstOrDefaultAsync();
-            //    PictureName = await _context.Files.Where(a => a.Id == pictureid).Select(a => a.OriginalName).FirstOrDefaultAsync();
-            //    PictureDate = await _context.Files.Where(a => a.Id == pictureid).Select(a => a.UploadedAt).FirstOrDefaultAsync();
-            //    PictureOwnerId = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).Select(a => a.UploaderId).FirstOrDefaultAsync();
-            //    PicturePublic = await _context.Files.Where(b => b.Id == pictureid).Select(a => a.IsPublic).FirstOrDefaultAsync();
-            //    AlbumOwnerId = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).Select(a => a.UploaderId).FirstOrDefaultAsync();
-            //    IsPictureInAlbum = _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == albumid).Any();// soubor v galerii
-            //    AlbumIdReceived = albumid;
-            //    PictureIdReceived = pictureid;
-            //}
         }
 
         public async Task<IActionResult> OnGetThumbnail(string filename, Guid? pictureid)
@@ -224,7 +244,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
             AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
  
-            Picture = _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.Id == pictureid).FirstOrDefault();
+            Picture = _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).FirstOrDefault();
 
             if (pictureid == null)
             {
@@ -260,39 +280,21 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                 }
                 else // pokud nejsem vlastník fotky
                 {
-                    return RedirectToPage(new { pictureid = pictureid });
+                    if (Picture.IsPublic == true) // Pokud je fotka veřejná
+                    {
+                        PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Where(a => a.PictureId == pictureid).ToListAsync(); // záznamy o dané fotce
+                        AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
+                        var userAlbums = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).ToListAsync();
+
+                        PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == AlbumIdDefault).FirstOrDefaultAsync();
+                        _context.StoredFileAlbums.Remove(PictureAlbum);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    return RedirectToPage("./Albums/Index");
                 }
                 return RedirectToPage(new { pictureid=Picture });
             }
-            //else if (pictureid != null && albumid != null)
-            //{
-            //    var pictures = _context.StoredFileAlbums.Include(a => a.Picture).Where(a => a.PictureId == pictureid);
-            //    foreach (var item in await pictures.ToListAsync()) // vymazat fotku ze všech alb
-            //    {
-            //        _context.StoredFileAlbums.Remove(item);
-            //    }
-            //    await _context.SaveChangesAsync();
-
-            //    Picture = await _context.Files.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.Id == pictureid).FirstOrDefaultAsync(); // vymazat fotku z Files
-            //    _context.Files.Remove(Picture);
-            //    await _context.SaveChangesAsync();
-
-            //    var thumbnails = _context.Thumbnails.Include(a => a.File).Where(a => a.FileId == pictureid);
-            //    foreach (var item in await thumbnails.ToListAsync()) // vymazat náhledy fotky
-            //    {
-            //        _context.Thumbnails.Remove(item);
-            //    }
-            //    await _context.SaveChangesAsync();
-
-            //    //vymazat fotku na disku
-            //    var pictureIdString = Path.Combine(_environment.ContentRootPath, "Uploads", pictureid.ToString()); // cesta k fotce na disku
-            //    if (System.IO.File.Exists(pictureIdString)) // pokud záznam o fotce na disku existuje
-            //    {
-            //        System.IO.File.Delete(pictureIdString);
-            //    }
-
-            //    return RedirectToPage(new { albumid = albumid });
-            //}
             return RedirectToPage(new { pictureid = pictureid });
         }
 
@@ -301,6 +303,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
             AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba - nelze ho smazat
             IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
+            var albumIdStranger = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
 
             if (pictureid == null && albumid == null && albumid != AlbumIdDefault)
             {
@@ -320,15 +323,43 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             }
             else if (pictureid != null && albumid != null && albumid != AlbumIdDefault)
             {
-                PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
-                _context.StoredFileAlbums.Remove(PictureAlbum);
-                await _context.SaveChangesAsync();
-                return RedirectToPage(new { albumid = albumid });
+                Picture = await _context.Files.Where(a => a.Id == pictureid).FirstOrDefaultAsync();
+                Album = await _context.Albums.Where(a => a.AlbumId == albumid).FirstOrDefaultAsync();
+                if (Picture.UploaderId == userId) // pokud vlastním fotku
+                {
+                    if (Album.UploaderId == userId) // pokud vlastním album
+                    {
+                        PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                        _context.StoredFileAlbums.Remove(PictureAlbum);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    else if (Album.UploaderId != userId) // pokud nevlastním album
+                    {
+
+                    }
+                }
+                else if (Picture.UploaderId != userId) // pokud nevlastním fotku
+                {
+                    if (Picture.IsPublic == true) // pokud je fotka veřejná
+                    {
+                        Picture = await _context.Files.Where(a => a.Id == pictureid).FirstOrDefaultAsync();
+                        Album = await _context.Albums.Where(a => a.AlbumId == albumid).FirstOrDefaultAsync();
+
+                        PictureAlbum = await _context.StoredFileAlbums.Include(a => a.Picture).Include(b => b.Album).Where(a => a.PictureId == pictureid).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                        _context.StoredFileAlbums.Remove(PictureAlbum);
+                        await _context.SaveChangesAsync();
+                        return RedirectToPage("./Albums/Specificc/Index", new { albumid = albumid });
+                    }
+
+                }
+                
+
             }
-            return RedirectToPage(new { albumid = albumid });
+            return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
         }
 
-        public async Task<IActionResult> OnPostMakePhotoPublic(Guid? pictureid) // zveřejnit fotku
+        public async Task<IActionResult> OnPostMakePhotoPublic(Guid? pictureid, Guid? albumid) // zveřejnit fotku
         {
             UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
             Picture = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
@@ -340,25 +371,25 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                     {
                         Picture.IsPublic = true;
                         await _context.SaveChangesAsync();
-                        return RedirectToPage(new { pictureid = pictureid });
+                        return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                     }
                     else
                     {
-                        return RedirectToPage(new { pictureid = pictureid });
+                        return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                     }
                 }
                 else
                 {
-                    return RedirectToPage(new { pictureid = pictureid });
+                    return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                 }
             }
             else
             {
-                return RedirectToPage(new { pictureid = pictureid });
+                return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
             }
         }
 
-        public async Task<IActionResult> OnPostMakePhotoPrivate(Guid? pictureid)
+        public async Task<IActionResult> OnPostMakePhotoPrivate(Guid? pictureid, Guid? albumid)
         {
             UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
             Picture = await _context.Files.Include(a => a.Uploader).Where(b => b.Id == pictureid).FirstOrDefaultAsync();
@@ -370,21 +401,21 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                     {
                         Picture.IsPublic = false;
                         await _context.SaveChangesAsync();
-                        return RedirectToPage(new { pictureid = pictureid });
+                        return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                     }
                     else
                     {
-                        return RedirectToPage(new { pictureid = pictureid });
+                        return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                     }
                 }
                 else
                 {
-                    return RedirectToPage(new { pictureid = pictureid });
+                    return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
                 }
             }
             else
             {
-                return RedirectToPage(new { pictureid = pictureid });
+                return RedirectToPage(new { pictureid = pictureid, albumid = albumid });
             }
         }
 

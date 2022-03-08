@@ -39,8 +39,9 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
         public IList<StoredFileAlbum> PicturesAlbum { get; set; }
 
 
-        public async Task OnGetAsync(Guid? albumid)
+        public async Task OnGetAsync(Guid? albumid, int? filterid)
         {
+
             var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
             AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
 
@@ -48,7 +49,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             {
                 NotFoundAlbum = "Nebylo zvoleno konkrétní album.";
             }
-            else if (albumid != null)
+            else if (albumid != null && filterid == null)
             {
                 UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
                 Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
@@ -56,6 +57,26 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
                 AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
                 PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu
                 PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Include(b => b.Picture).Where(a => a.AlbumId == albumid).ToListAsync(); // fotky v konkrétním albu
+                IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
+            }
+            else if (albumid != null && filterid == 1)
+            {
+                UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
+                AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
+                PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu
+                PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Include(b => b.Picture).Where(a => a.AlbumId == albumid).OrderBy(a => a.Picture.OriginalName).ToListAsync(); // fotky v konkrétním albu
+                IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
+            }
+            else if (albumid != null && filterid == 2)
+            {
+                UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
+                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
+                AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
+                PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu
+                PicturesAlbum = await _context.StoredFileAlbums.Include(a => a.Album).Include(b => b.Picture).Where(a => a.AlbumId == albumid).OrderBy(a => a.Picture.UploadedAt).ToListAsync(); // fotky v konkrétním albu
                 IsAlbumPublic = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Select(c => c.IsPublic).FirstOrDefaultAsync();
             }
         }

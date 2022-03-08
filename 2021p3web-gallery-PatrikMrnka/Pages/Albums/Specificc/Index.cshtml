@@ -17,6 +17,8 @@ else if (Model.AlbumIdReceived != null)
         <p class="album_PictureCount">Počet fotek: @Model.PicturesInAlbum</p>
         <div class="album_actionButtons">
             <div class="picture_action_flex_container">
+                <a class="btn-gradient-1" asp-route-albumid="@Model.Album.AlbumId" asp-route-filterid="1">Řadit dle jména</a>
+                <a class="btn-gradient-1" asp-route-albumid="@Model.Album.AlbumId" asp-route-filterid="2">Řadit dle publikace</a>
         @if (Model.AlbumIdDefault != Model.AlbumIdReceived) // pokud album není default
         {
             @if (Model.Album.UploaderId == Model.UserId) // jsem jeho vlastník - jedno jestli je veřejné

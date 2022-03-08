@@ -121,13 +121,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ef631298-05ce-4fe4-b508-85c0a0e31850",
+                            ConcurrencyStamp = "6bd7b799-2a47-40fc-832b-8de1b9006700",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENR8lvANzOw9DvL3wY1tWQywpQV6SAYMS4sjZMhGcQ/BcT92fZAb6J4wZuqt3LjVXQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEITz9IF6WgXSSw54bjKYFCbm/VNs9/uRQj0W+OrqGyhdzY0BzQZeWIko4m/PkhZAIg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -230,7 +230,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "b96de0de-9979-4194-b6a9-670a3fa50fff",
+                            ConcurrencyStamp = "e0fca648-50ca-4a9e-8d8d-a1cdd519b2d1",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });
