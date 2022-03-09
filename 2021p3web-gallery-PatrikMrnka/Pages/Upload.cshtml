@@ -17,12 +17,12 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="StoredFile.IsPublic" /> @Html.DisplayNameFor(model => model.StoredFile.IsPublic)
+                    <input class="form-check-input" asp-for="StoredFile.IsPublic" /> Veřejné
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Upload" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="/Index">Back</a>
+                <input type="submit" value="Nahrát" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="/Index">Zpět</a>
             </div>
         </form>
     </div>
@@ -30,7 +30,7 @@
 }
 else if (@Model.AlbumIdReceived != null && @Model.PictureIdReceived == null) // upravený upload obrázku do určitého odkázaného alba
 {
-    <h1>Nahrát soubor do @Model.AlbumIdReceived</h1>
+    <h1>Nahrát soubor do @Model.Album.Name</h1>
     <hr />
         <div class="row">
     <div class="col-md-4">
@@ -41,12 +41,12 @@ else if (@Model.AlbumIdReceived != null && @Model.PictureIdReceived == null) // 
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="StoredFile.IsPublic" /> @Html.DisplayNameFor(model => model.StoredFile.IsPublic)
+                    <input class="form-check-input" asp-for="StoredFile.IsPublic" /> Veřejné
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Upload" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="/Index">Back</a>
+                <input type="submit" value="Nahrát" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="/Index">Zpět</a>
             </div>
         </form>
     </div>

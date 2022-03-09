@@ -42,9 +42,10 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages
             //if (Int32.TryParse(_configuration["Thumbnails:SameAspectRatioHeigth"], out _sameAspectRatioHeigth) == false) _sameAspectRatioHeigth = 320;
 
         }
-        public void OnGet(Guid? albumid, Guid? pictureid)
+        public async void OnGet(Guid? albumid, Guid? pictureid)
         {
             AlbumIdReceived = albumid;
+            Album = _context.Albums.Where(a => a.AlbumId == AlbumIdReceived).FirstOrDefault();
             PictureIdReceived = pictureid;
             //ViewData["AlbumId"] = new SelectList(_context.StoredFileAlbums, "AlbumId", "Name");
         }

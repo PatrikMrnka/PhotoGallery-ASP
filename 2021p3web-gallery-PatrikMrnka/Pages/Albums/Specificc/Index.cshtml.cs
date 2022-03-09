@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using _2021p3web_gallery_PatrikMrnka.Data;
 using _2021p3web_gallery_PatrikMrnka.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly _2021p3web_gallery_PatrikMrnka.Data.ApplicationDbContext _context;
@@ -52,7 +54,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             else if (albumid != null && filterid == null)
             {
                 UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                Album = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
                 AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
                 AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
                 PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu
@@ -62,7 +64,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             else if (albumid != null && filterid == 1)
             {
                 UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                Album = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
                 AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
                 AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
                 PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu
@@ -72,7 +74,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Pages.Albums.Specificc
             else if (albumid != null && filterid == 2)
             {
                 UserId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value; // ID přihlášeného uživatele
-                Album = await _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
+                Album = await _context.Albums.Include(a => a.Uploader).Where(b => b.AlbumId == albumid).FirstOrDefaultAsync();
                 AlbumIdReceived = albumid; // oveření do PageModel, jestli bylo nějaké AlbumId obdrženo - pokud ne, nezobrazí se nic
                 AlbumIdDefault = _context.Albums.Include(a => a.Uploader).Where(a => a.UploaderId == userId).Where(b => b.AlbumId == albumid).Where(b => b.IsDefault == true).Select(b => b.AlbumId).FirstOrDefault(); // AlbumId výchozího alba
                 PicturesInAlbum = _context.StoredFileAlbums.Include(a => a.Album).Where(a => a.AlbumId == albumid).Count(); // počet fotek v albu

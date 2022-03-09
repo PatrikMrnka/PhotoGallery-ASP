@@ -12,8 +12,8 @@ using _2021p3web_gallery_PatrikMrnka.Data;
 namespace _2021p3web_gallery_PatrikMrnka.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220308203113_1")]
-    partial class _1
+    [Migration("20220309070749_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -123,13 +123,13 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         {
                             Id = "6540d112-4e61-48da-9236-06d12567613e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6bd7b799-2a47-40fc-832b-8de1b9006700",
+                            ConcurrencyStamp = "a1497dd0-a663-4767-9bc6-c0edcbe8a74c",
                             Email = "administrator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEITz9IF6WgXSSw54bjKYFCbm/VNs9/uRQj0W+OrqGyhdzY0BzQZeWIko4m/PkhZAIg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL4nOl3XgwbOkwI3ROune48bo08S1tLEsUc2kGmMP2UY6X8+OvIrqNeOQWukbrryxg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -232,7 +232,7 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
                         new
                         {
                             Id = "ae605389-4f99-42ac-a62e-7abc67bdd298",
-                            ConcurrencyStamp = "e0fca648-50ca-4a9e-8d8d-a1cdd519b2d1",
+                            ConcurrencyStamp = "0bba0f70-0ee8-4f1d-b240-a1fb2eb4193b",
                             Name = "Administator",
                             NormalizedName = "ADMINISTRATOR"
                         });

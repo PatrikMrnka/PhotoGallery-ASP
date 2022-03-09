@@ -249,12 +249,12 @@ namespace _2021p3web_gallery_PatrikMrnka.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "e0fca648-50ca-4a9e-8d8d-a1cdd519b2d1", "Administator", "ADMINISTRATOR" });
+                values: new object[] { "ae605389-4f99-42ac-a62e-7abc67bdd298", "a6b3a76d-a34b-4b82-8118-73084fe6f455", "Administator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "6bd7b799-2a47-40fc-832b-8de1b9006700", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEITz9IF6WgXSSw54bjKYFCbm/VNs9/uRQj0W+OrqGyhdzY0BzQZeWIko4m/PkhZAIg==", null, false, "", false, "administrator@gmail.com" });
+                values: new object[] { "6540d112-4e61-48da-9236-06d12567613e", 0, "fecc9c2a-c6b4-4af2-a03b-f8a327eaefa1", "administrator@gmail.com", true, false, null, "ADMINISTRATOR@GMAIL.COM", "ADMINISTRATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEKlPCiph9Vjki9CSZh3HSMhqS+oG+9O+2dfwZ9CaOIkNCM7lLvOT++roTM3DPmTwzg==", null, false, "", false, "administrator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
