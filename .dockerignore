@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/App_Data/
+**/.vs/
+**/.vscode/
+**/*.user
+.git/
+.github/
+docs/
+tests/
+tools/
+*.md

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: |
+          dotnet restore
+          dotnet tool restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Check that migrations match the model
+        run: dotnet ef migrations has-pending-model-changes --project src/PhotoGallery.Web --configuration Release --no-build
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=results.trx" --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build --tag photogallery-asp .
+
+      - name: Smoke test
+        run: |
+          docker run --detach --name app --publish 8080:8080 --env Demo__Enabled=true photogallery-asp
+          for i in $(seq 1 30); do
+            if curl --silent --fail http://localhost:8080/healthz; then break; fi
+            sleep 2
+          done
+          curl --silent --fail http://localhost:8080/ | grep -q "Explore public photos"
+          docker logs app
