@@ -11,7 +11,7 @@ jobs:
   screenshots:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Start the application
         run: |
@@ -38,7 +38,7 @@ jobs:
         if: always()
         run: docker logs app
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: screenshots
           path: docs/screenshots
