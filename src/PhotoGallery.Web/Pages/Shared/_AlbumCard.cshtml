@@ -1,0 +1,34 @@
+@model AlbumSummary
+
+<a class="album-card card h-100 text-decoration-none" asp-page="/Albums/Details" asp-route-id="@Model.Id">
+    <div class="album-cover">
+        @if (Model.CoverPhotoId is { } cover)
+        {
+            <img src="/media/@cover/thumb" alt="" loading="lazy" />
+        }
+        else
+        {
+            <span class="album-cover-empty">No photos</span>
+        }
+    </div>
+    <div class="card-body py-2 px-3">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+            <h3 class="h6 mb-0 text-truncate">@Model.Name</h3>
+            @if (Model.IsDefault)
+            {
+                <span class="badge text-bg-secondary">Default</span>
+            }
+            else if (Model.IsPublic)
+            {
+                <span class="badge text-bg-success">Public</span>
+            }
+            else
+            {
+                <span class="badge text-bg-dark">Private</span>
+            }
+        </div>
+        <small class="text-body-secondary">
+            @Model.PhotoCount @(Model.PhotoCount == 1 ? "photo" : "photos") · by @Model.OwnerName
+        </small>
+    </div>
+</a>

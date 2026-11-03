@@ -1,0 +1,11 @@
+@{
+    // The "Manage account" pages of the Identity UI reference this layout directly.
+    // Overriding it routes them to the application's layout as well.
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+@RenderBody()
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

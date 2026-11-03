@@ -1,0 +1,119 @@
+@page "{id:guid}"
+@model DetailsModel
+@{
+    var photo = Model.Photo;
+    ViewData["Title"] = photo.Name;
+    var sizeText = photo.SizeBytes >= 1024 * 1024
+        ? $"{photo.SizeBytes / (1024.0 * 1024):0.0} MB"
+        : $"{Math.Max(1, photo.SizeBytes / 1024)} kB";
+    var signedIn = User.Identity?.IsAuthenticated == true;
+}
+
+<div class="mb-3">
+    @if (Model.AlbumId is { } backAlbumId)
+    {
+        <a class="link-secondary text-decoration-none" asp-page="/Albums/Details" asp-route-id="@backAlbumId">&larr; Back to album</a>
+    }
+    else
+    {
+        <a class="link-secondary text-decoration-none" asp-page="/Index">&larr; Back to Explore</a>
+    }
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="photo-viewer">
+            <img src="/media/@photo.Id" alt="@photo.Name" width="@photo.Width" height="@photo.Height" />
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <h1 class="h4 text-break">@photo.Name</h1>
+        <p class="mb-2">
+            @if (photo.IsPublic)
+            {
+                <span class="badge text-bg-success">Public</span>
+            }
+            else
+            {
+                <span class="badge text-bg-dark">Private</span>
+            }
+        </p>
+
+        <dl class="row small mb-3">
+            <dt class="col-4 text-body-secondary">Author</dt>
+            <dd class="col-8">@photo.OwnerName</dd>
+            <dt class="col-4 text-body-secondary">Uploaded</dt>
+            <dd class="col-8">@photo.UploadedAt.ToString("d MMM yyyy, HH:mm") UTC</dd>
+            <dt class="col-4 text-body-secondary">Resolution</dt>
+            <dd class="col-8">@photo.Width × @photo.Height px</dd>
+            <dt class="col-4 text-body-secondary">Size</dt>
+            <dd class="col-8">@sizeText</dd>
+        </dl>
+
+        <a class="btn btn-outline-secondary btn-sm mb-4" href="/media/@(photo.Id)?download=true">Download original</a>
+
+        @if (photo.ViewerAlbums.Count > 0)
+        {
+            <h2 class="h6">In your albums</h2>
+            <ul class="list-unstyled mb-4">
+                @foreach (var album in photo.ViewerAlbums)
+                {
+                    <li><a asp-page="/Albums/Details" asp-route-id="@album.Id">@album.Name</a></li>
+                }
+            </ul>
+        }
+
+        @if (signedIn)
+        {
+            <div class="vstack gap-3">
+                @if (Model.AddableAlbums.Count > 0)
+                {
+                    <form method="post" asp-page-handler="AddToAlbum" asp-route-id="@photo.Id" asp-route-albumId="@Model.AlbumId">
+                        <label for="targetAlbumId" class="form-label small mb-1">Add to album</label>
+                        <div class="input-group input-group-sm">
+                            <select id="targetAlbumId" name="targetAlbumId" class="form-select">
+                                @foreach (var album in Model.AddableAlbums)
+                                {
+                                    <option value="@album.Id">@album.Name</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-outline-primary">Add</button>
+                        </div>
+                    </form>
+                }
+
+                @if (Model.OwnContextAlbum is { IsDefault: false } contextAlbum)
+                {
+                    <form method="post" asp-page-handler="RemoveFromAlbum" asp-route-id="@photo.Id">
+                        <input type="hidden" name="fromAlbumId" value="@contextAlbum.Id" />
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Remove from “@contextAlbum.Name”</button>
+                    </form>
+                }
+
+                @if (photo.IsOwner)
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        <form method="post" asp-page-handler="Visibility" asp-route-id="@photo.Id" asp-route-albumId="@Model.AlbumId">
+                            <input type="hidden" name="isPublic" value="@(photo.IsPublic ? "false" : "true")" />
+                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                @(photo.IsPublic ? "Make private" : "Make public")
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@photo.Id" asp-route-albumId="@Model.AlbumId"
+                              data-confirm="Delete this photo permanently? It will be removed from all albums.">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete photo</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else if (photo.IsPublic)
+        {
+            <p class="small text-body-secondary">
+                <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Page("/Photos/Details", new { id = photo.Id })">Sign in</a>
+                to add this photo to your own albums.
+            </p>
+        }
+    </div>
+</div>

@@ -1,0 +1,26 @@
+@model PhotoGridModel
+
+@if (Model.Photos.Count == 0)
+{
+    <p class="text-body-secondary py-4">@Model.EmptyText</p>
+}
+else
+{
+    <div class="photo-grid">
+        @foreach (var photo in Model.Photos)
+        {
+            <a class="photo-tile" asp-page="/Photos/Details" asp-route-id="@photo.Id" asp-route-albumId="@Model.AlbumId"
+               title="@photo.Name">
+                <img src="/media/@photo.Id/thumb" alt="@photo.Name" loading="lazy" />
+                @if (Model.ShowVisibility && !photo.IsPublic)
+                {
+                    <span class="badge text-bg-dark photo-badge">Private</span>
+                }
+                <span class="photo-caption">
+                    <span class="text-truncate">@photo.Name</span>
+                    <span class="opacity-75">by @photo.OwnerName</span>
+                </span>
+            </a>
+        }
+    </div>
+}

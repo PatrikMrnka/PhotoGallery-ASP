@@ -1,0 +1,26 @@
+@model SortOrder
+@{
+    var options = new (SortOrder Value, string Label)[]
+    {
+        (SortOrder.Newest, "Newest first"),
+        (SortOrder.Oldest, "Oldest first"),
+        (SortOrder.Name, "Name"),
+    };
+}
+<form method="get" class="d-flex align-items-center gap-2">
+    <label for="sort" class="small text-body-secondary">Sort</label>
+    <select id="sort" name="sort" class="form-select form-select-sm w-auto" data-autosubmit>
+        @foreach (var option in options)
+        {
+            if (option.Value == Model)
+            {
+                <option value="@option.Value" selected>@option.Label</option>
+            }
+            else
+            {
+                <option value="@option.Value">@option.Label</option>
+            }
+        }
+    </select>
+    <noscript><button type="submit" class="btn btn-sm btn-outline-secondary">Apply</button></noscript>
+</form>

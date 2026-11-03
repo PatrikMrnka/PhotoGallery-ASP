@@ -1,0 +1,136 @@
+:root {
+    --pg-radius: 0.6rem;
+}
+
+.navbar-brand svg {
+    color: var(--bs-primary);
+}
+
+.demo-banner {
+    background: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+    border-bottom: 1px solid var(--bs-primary-border-subtle);
+}
+
+.preserve-lines {
+    white-space: pre-line;
+}
+
+.hero {
+    padding: 2rem;
+    border-radius: var(--pg-radius);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(var(--bs-primary-rgb), 0.18), transparent 55%),
+        radial-gradient(circle at 85% 80%, rgba(var(--bs-info-rgb), 0.16), transparent 50%),
+        var(--bs-tertiary-bg);
+}
+
+/* ---------- photo grid ---------- */
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.75rem;
+}
+
+.photo-tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--pg-radius);
+    background: var(--bs-secondary-bg);
+}
+
+.photo-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.photo-tile:hover img,
+.photo-tile:focus-visible img {
+    transform: scale(1.05);
+}
+
+.photo-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+}
+
+.photo-caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 0.65rem 0.5rem;
+    font-size: 0.8rem;
+    color: #fff;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.photo-tile:hover .photo-caption,
+.photo-tile:focus-visible .photo-caption {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .photo-caption {
+        opacity: 1;
+    }
+}
+
+/* ---------- albums ---------- */
+
+.album-card {
+    overflow: hidden;
+    border-radius: var(--pg-radius);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.album-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--bs-box-shadow);
+}
+
+.album-cover {
+    aspect-ratio: 4 / 3;
+    background: var(--bs-secondary-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-cover-empty {
+    color: var(--bs-secondary-color);
+    font-size: 0.85rem;
+}
+
+/* ---------- photo detail ---------- */
+
+.photo-viewer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    border-radius: var(--pg-radius);
+    background: var(--bs-dark-bg-subtle);
+    overflow: hidden;
+}
+
+.photo-viewer img {
+    max-width: 100%;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+}

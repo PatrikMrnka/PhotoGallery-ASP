@@ -1,0 +1,14 @@
+@page
+@{
+    ViewData["Title"] = "Demo account";
+}
+
+<div class="text-center py-5">
+    <h1 class="h3">The demo account is shared</h1>
+    <p class="text-body-secondary">
+        Account settings of the shared demo account cannot be changed, so it keeps working for every visitor.<br />
+        Create your own account to try password changes, two-factor authentication or account deletion.
+    </p>
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Create an account</a>
+    <a class="btn btn-outline-secondary" asp-page="/Index">Back to Explore</a>
+</div>

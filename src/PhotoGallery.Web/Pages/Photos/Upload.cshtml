@@ -1,0 +1,49 @@
+@page
+@model UploadModel
+@{
+    ViewData["Title"] = "Upload photos";
+    var maxMb = Model.Limits.MaxFileBytes / (1024 * 1024);
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-3">Upload photos</h1>
+
+        <form method="post" enctype="multipart/form-data" class="card card-body gap-3">
+            <div>
+                <label asp-for="Files" class="form-label">Images</label>
+                <input asp-for="Files" type="file" class="form-control" multiple required
+                       accept="image/jpeg,image/png,image/gif,image/webp" />
+                <div class="form-text">
+                    JPEG, PNG, GIF or WebP · up to @maxMb MB per file · at most @Model.Limits.MaxFilesPerRequest files at once.
+                    Location and other metadata are removed from uploaded images.
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="AlbumId" class="form-label">Album</label>
+                <select asp-for="AlbumId" class="form-select">
+                    <option value="">@GalleryService.DefaultAlbumName only</option>
+                    @foreach (var album in Model.Albums)
+                    {
+                        <option value="@album.Id">
+                            @(album.IsPublic ? $"{album.Name} (public)" : album.Name)
+                        </option>
+                    }
+                </select>
+                <div class="form-text">Every upload is also added to @GalleryService.DefaultAlbumName.</div>
+            </div>
+
+            <div class="form-check">
+                <input asp-for="IsPublic" class="form-check-input" />
+                <label asp-for="IsPublic" class="form-check-label">Make the photos public</label>
+                <div class="form-text">Public photos appear on the Explore page and can be added to other people's albums.</div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+                <a class="btn btn-link" asp-page="/Albums/Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

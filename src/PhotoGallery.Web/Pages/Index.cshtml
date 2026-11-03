@@ -1,0 +1,62 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Explore";
+    var grid = new PhotoGridModel(Model.Photos.Items, EmptyText: "Nobody has shared a public photo yet.");
+}
+
+<section class="hero mb-4">
+    <h1 class="display-6 fw-semibold mb-2">Explore public photos</h1>
+    <p class="lead text-body-secondary mb-3">
+        @Model.Stats.PublicPhotos public @(Model.Stats.PublicPhotos == 1 ? "photo" : "photos")
+        in @Model.Stats.PublicAlbums public @(Model.Stats.PublicAlbums == 1 ? "album" : "albums").
+        Sign in to upload your own pictures and organise them into albums.
+    </p>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-primary" asp-page="/Photos/Upload">Upload photos</a>
+        <a class="btn btn-outline-secondary" asp-page="/Albums/Index">My albums</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Create an account</a>
+        <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Login">Sign in</a>
+    }
+</section>
+
+@if (Model.Albums.Count > 0)
+{
+    <section class="mb-5">
+        <h2 class="h4 mb-3">Public albums</h2>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+            @foreach (var album in Model.Albums)
+            {
+                <div class="col">
+                    <partial name="_AlbumCard" model="album" />
+                </div>
+            }
+        </div>
+    </section>
+}
+
+<section>
+    <h2 class="h4 mb-3">Latest photos</h2>
+    <partial name="_PhotoGrid" model="grid" />
+
+    @if (Model.Photos.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Photo pages">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Photos.HasPrevious ? "" : "disabled")">
+                    <a class="page-link" asp-page="/Index" asp-route-p="@(Model.Photos.Page - 1)">Previous</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Page @Model.Photos.Page of @Model.Photos.TotalPages</span>
+                </li>
+                <li class="page-item @(Model.Photos.HasNext ? "" : "disabled")">
+                    <a class="page-link" asp-page="/Index" asp-route-p="@(Model.Photos.Page + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</section>

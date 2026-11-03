@@ -1,0 +1,30 @@
+@page
+@model PhotoGallery.Web.Pages.Albums.IndexModel
+@{
+    ViewData["Title"] = "My albums";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <h1 class="h3 mb-0">My albums</h1>
+    <div class="d-flex flex-wrap gap-2">
+        <partial name="_SortSelect" model="Model.Sort" />
+        <a class="btn btn-primary btn-sm" asp-page="/Photos/Upload">Upload photos</a>
+    </div>
+</div>
+
+<form method="post" asp-page-handler="Create" class="card card-body mb-4">
+    <label for="name" class="form-label">New album</label>
+    <div class="input-group">
+        <input id="name" name="name" class="form-control" placeholder="e.g. Summer holiday" maxlength="@Album.NameMaxLength" required />
+        <button type="submit" class="btn btn-outline-primary">Create album</button>
+    </div>
+</form>
+
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    @foreach (var album in Model.Albums)
+    {
+        <div class="col">
+            <partial name="_AlbumCard" model="album" />
+        </div>
+    }
+</div>
