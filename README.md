@@ -7,7 +7,7 @@
 A photo sharing web application built with **ASP.NET Core Razor Pages**, **Entity Framework Core** and **ASP.NET Core Identity**.
 Users upload photos, organise them into albums and decide what is private and what is shared with everyone.
 
-**Live demo: DEMO_URL**
+**Live demo: <https://photogallery-asp.onrender.com>**
 Sign in with `demo@photogallery.local` / `Demo1234`, or create your own account.
 The demo runs on a free instance: the first request after a period of inactivity can take about a minute, and all data is reset on every restart.
 
