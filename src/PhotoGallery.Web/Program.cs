@@ -48,7 +48,7 @@ builder.Services.AddSingleton<IPhotoStorage>(sp =>
     var environment = sp.GetRequiredService<IWebHostEnvironment>();
     return new FileSystemPhotoStorage(Path.Combine(environment.ContentRootPath, options.Path));
 });
-builder.Services.AddSingleton<IImageProcessor, ImageSharpProcessor>();
+builder.Services.AddSingleton<IImageProcessor, SkiaImageProcessor>();
 builder.Services.AddScoped<GalleryService>();
 
 // Hosting platforms terminate TLS in a reverse proxy and forward the original scheme.

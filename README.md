@@ -33,7 +33,7 @@ The demo runs on a free instance: the first request after a period of inactivity
 | Web | ASP.NET Core 10 Razor Pages, Minimal API endpoints for image delivery |
 | Data | Entity Framework Core 10, SQLite, code-first migrations |
 | Auth | ASP.NET Core Identity (cookie authentication, 2FA) |
-| Images | SixLabors.ImageSharp (format detection, resizing, metadata removal) |
+| Images | SkiaSharp (format detection, orientation, resizing, metadata removal) |
 | UI | Bootstrap 5.3, vanilla JavaScript |
 | Tests | xUnit, `WebApplicationFactory` integration tests, in-memory SQLite |
 | Delivery | Docker, GitHub Actions, Render |
@@ -49,7 +49,7 @@ flowchart LR
     Service --> Access[GalleryAccess<br/>permission rules]
     Service --> Db[(SQLite<br/>EF Core)]
     Service --> Storage[IPhotoStorage<br/>original files]
-    Service --> Images[IImageProcessor<br/>ImageSharp]
+    Service --> Images[IImageProcessor<br/>SkiaSharp]
 ```
 
 - **Razor Pages** only translate HTTP requests into calls of `GalleryService` and render the result. They contain no data access or permission logic.

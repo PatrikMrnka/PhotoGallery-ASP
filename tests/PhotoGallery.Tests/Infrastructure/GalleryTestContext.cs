@@ -27,7 +27,7 @@ internal sealed class GalleryTestContext : IAsyncDisposable
         Service = new GalleryService(
             db,
             Storage,
-            new ImageSharpProcessor(MsOptions.Create(uploadOptions)),
+            new SkiaImageProcessor(MsOptions.Create(uploadOptions)),
             MsOptions.Create(uploadOptions),
             TimeProvider.System,
             NullLogger<GalleryService>.Instance);

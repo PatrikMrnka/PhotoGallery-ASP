@@ -1,14 +1,14 @@
 using PhotoGallery.Tests.Infrastructure;
 using PhotoGallery.Web.Options;
 using PhotoGallery.Web.Services;
-using SixLabors.ImageSharp;
+using SkiaSharp;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace PhotoGallery.Tests;
 
 public class ImageProcessorTests
 {
-    private static ImageSharpProcessor CreateProcessor(UploadOptions? options = null) =>
+    private static SkiaImageProcessor CreateProcessor(UploadOptions? options = null) =>
         new(MsOptions.Create(options ?? new UploadOptions()));
 
     [Fact]
@@ -19,17 +19,32 @@ public class ImageProcessorTests
         Assert.Equal("image/png", result.ContentType);
         Assert.Equal(64, result.Width);
         Assert.Equal(48, result.Height);
+        Assert.Equal(SKEncodedImageFormat.Png, TestImages.Inspect(result.Data).Format);
     }
 
     [Fact]
-    public async Task Removes_exif_metadata_including_location()
+    public async Task Removes_exif_metadata()
     {
         var input = TestImages.JpegWithExif();
-        Assert.NotNull(Image.Identify(input).Metadata.ExifProfile);
+        Assert.True(TestImages.ContainsExif(input));
 
         var result = await CreateProcessor().ProcessAsync(new MemoryStream(input));
 
-        Assert.Null(Image.Identify(result.Data).Metadata.ExifProfile);
+        Assert.Equal("image/jpeg", result.ContentType);
+        Assert.False(TestImages.ContainsExif(result.Data));
+    }
+
+    [Fact]
+    public async Task Applies_exif_orientation_to_the_pixels()
+    {
+        // Orientation 6 = the camera was rotated, the picture must be turned 90° clockwise.
+        var input = TestImages.JpegWithExif(64, 48, orientation: 6);
+
+        var result = await CreateProcessor().ProcessAsync(new MemoryStream(input));
+
+        Assert.Equal((48, 64), (result.Width, result.Height));
+        var stored = TestImages.Inspect(result.Data);
+        Assert.Equal((48, 64), (stored.Width, stored.Height));
     }
 
     [Fact]
@@ -39,10 +54,10 @@ public class ImageProcessorTests
 
         var result = await processor.ProcessAsync(new MemoryStream(TestImages.Png(400, 200)));
 
-        var thumbnail = Image.Identify(result.Thumbnail);
+        var thumbnail = TestImages.Inspect(result.Thumbnail);
         Assert.Equal("image/webp", result.ThumbnailContentType);
-        Assert.Equal(100, thumbnail.Width);
-        Assert.Equal(50, thumbnail.Height);
+        Assert.Equal(SKEncodedImageFormat.Webp, thumbnail.Format);
+        Assert.Equal((100, 50), (thumbnail.Width, thumbnail.Height));
     }
 
     [Fact]
@@ -50,14 +65,26 @@ public class ImageProcessorTests
     {
         var result = await CreateProcessor().ProcessAsync(new MemoryStream(TestImages.Png(40, 30)));
 
-        Assert.Equal(40, Image.Identify(result.Thumbnail).Width);
+        Assert.Equal(40, TestImages.Inspect(result.Thumbnail).Width);
+    }
+
+    [Fact]
+    public async Task Keeps_gif_files_unchanged()
+    {
+        var result = await CreateProcessor().ProcessAsync(new MemoryStream(TestImages.Gif));
+
+        Assert.Equal("image/gif", result.ContentType);
+        Assert.Equal(TestImages.Gif, result.Data);
+        Assert.Equal(SKEncodedImageFormat.Webp, TestImages.Inspect(result.Thumbnail).Format);
     }
 
     [Fact]
     public async Task Rejects_unsupported_formats()
     {
-        await Assert.ThrowsAsync<InvalidImageException>(
+        var exception = await Assert.ThrowsAsync<InvalidImageException>(
             () => CreateProcessor().ProcessAsync(new MemoryStream(TestImages.Bmp())));
+
+        Assert.Contains("not supported", exception.Message);
     }
 
     [Fact]
