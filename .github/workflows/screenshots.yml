@@ -1,11 +1,12 @@
 name: Screenshots
 
-# Regenerates the README screenshots from the Docker image with demo data.
+# Regenerates the README screenshots from the Docker image with demo data
+# and pushes them to the "screenshots" branch for review.
 on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   screenshots:
@@ -38,7 +39,11 @@ jobs:
         if: always()
         run: docker logs app
 
-      - uses: actions/upload-artifact@v7
-        with:
-          name: screenshots
-          path: docs/screenshots
+      - name: Push to the screenshots branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --create screenshots
+          git add docs/screenshots
+          git commit --message "Update screenshots"
+          git push --force origin screenshots
